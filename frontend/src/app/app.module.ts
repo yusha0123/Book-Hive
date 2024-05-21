@@ -13,9 +13,10 @@ import { AppComponent } from './app.component';
 import { AddBookComponent } from './routes/add-book/add-book.component';
 import { RootComponent } from './routes/root/root.component';
 import { ToastrModule } from 'ngx-toastr';
+import { BookDetailsComponent } from './routes/book-details/book-details.component';
 
 @NgModule({
-  declarations: [AppComponent, RootComponent, AddBookComponent],
+  declarations: [AppComponent, RootComponent, AddBookComponent, BookDetailsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

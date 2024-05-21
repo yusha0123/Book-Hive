@@ -1,1 +1,24 @@
-<p>root works!</p>
+<section class="w-full h-full">
+  <div
+    class="max-w-screen-lg mx-auto px-3 md:px-6 xl:px-0 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 overflow-y-auto pb-10"
+  >
+    <div
+      *ngFor="let book of books"
+      class="w-full card transition-all duration-300 p-3 border border-gray-200 rounded-lg cursor-pointer"
+      (click)="navigateToBook(book._id!)"
+    >
+      <img
+        src="{{ book.coverUrl }}"
+        alt="book-image"
+        class="h-48 w-48 mx-auto rounded-md mb-2"
+      />
+      <h3 class="text-[16px] !m-0">{{ book.title }}</h3>
+      <div class="flex items-center justify-between">
+        <p class="text-[16px] font-bold !m-0">&#x20B9;{{ book.price }}</p>
+        <button mat-icon-button>
+          <i class="pi pi-cart-plus block"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
