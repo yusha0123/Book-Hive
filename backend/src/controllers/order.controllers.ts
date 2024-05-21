@@ -34,7 +34,7 @@ export const createOrder = async (
 
 export const getOrders = async (req: Request, res: Response) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find().populate("orderItems.book");
     res.json(orders);
   } catch (error) {
     res.status(500).json({
