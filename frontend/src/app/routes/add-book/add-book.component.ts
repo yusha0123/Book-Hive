@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Book } from 'src/app/interfaces';
+import { BookService } from 'src/app/services/book.service';
 
 @Component({
   selector: 'app-add-book',
@@ -13,8 +14,8 @@ export class AddBookComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private httpClient: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private bookService: BookService
   ) {
     this.bookForm = this.formBuilder.group({
       title: ['', Validators.required],
@@ -27,9 +28,15 @@ export class AddBookComponent {
   }
 
   submitForm = () => {
-    if (this.bookForm.valid) {
-      console.log(this.bookForm.value);
-      this.toastr.success('Hello world!', 'Toastr fun!');
-    }
+    const book: Book = this.bookForm.value;
+    this.bookService.listBook(book).subscribe({
+      next: () => {
+        this.toastr.success('Book listed successfully!');
+        this.bookForm.reset();
+      },
+      error: () => {
+        this.toastr.error('Failed to list book', 'Something went wrong!');
+      },
+    });
   };
 }
