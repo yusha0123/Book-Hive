@@ -7,3 +7,7 @@ export interface Book {
   author: string;
   genre: string;
 }
+
+export interface CartItem extends Book {
+  quantity: number;
+}

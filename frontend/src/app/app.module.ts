@@ -16,6 +16,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BookDetailsComponent } from './routes/book-details/book-details.component';
 import { NotFoundComponent } from './routes/not-found/not-found.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CartComponent } from './routes/cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AddBookComponent,
     BookDetailsComponent,
     NotFoundComponent,
+    CartComponent,
   ],
   imports: [
     BrowserModule,

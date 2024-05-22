@@ -10,11 +10,11 @@
   </div>
   <div class="col-span-12 md:col-span-8 flex flex-col gap-y-2">
     <p
-      class="text-2xl md:text-3xl font-semibold !m-0 flex items-center flex-wrap gap-2"
+      class="text-2xl md:text-3xl font-semibold flex items-center flex-wrap gap-2"
     >
       {{ book?.title }}
     </p>
-    <p class="text-sm !m-0">
+    <p class="text-sm">
       by <span class="text-blue-500">{{ book?.author }}</span> (Author)
     </p>
 
@@ -24,6 +24,14 @@
     >
       {{ book?.genre }}
     </span>
-    <p class="text-lg !m-0">{{ book?.description }}</p>
+    <div class="flex my-2 items-center gap-2 justify-center md:justify-start">
+      <button mat-flat-button color="primary">
+        <i class="pi pi-shopping-cart mr-2"></i>Add to Cart
+      </button>
+      <button mat-icon-button>
+        <i class="pi pi-heart"></i>
+      </button>
+    </div>
+    <p class="text-lg">{{ book?.description }}</p>
   </div>
 </section>

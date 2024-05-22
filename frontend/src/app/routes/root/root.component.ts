@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Book } from 'src/app/interfaces';
 import { BookService } from 'src/app/services/book.service';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class RootComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +34,21 @@ export class RootComponent implements OnInit {
     });
   }
 
+  onAddToCart(event: Event, book: Book): void {
+    event.stopPropagation();
+    this.cartService.addToCart(book);
+  }
+
   navigateToBook(bookId: string): void {
     this.router.navigate(['/book', bookId]);
+  }
+
+  isInCart(book: Book): boolean {
+    return !!this.cartService.cartItems.find((item) => item._id === book._id);
+  }
+
+  navigateToCart(event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/cart']);
   }
 }
