@@ -14,9 +14,17 @@ import { AddBookComponent } from './routes/add-book/add-book.component';
 import { RootComponent } from './routes/root/root.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BookDetailsComponent } from './routes/book-details/book-details.component';
+import { NotFoundComponent } from './routes/not-found/not-found.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [AppComponent, RootComponent, AddBookComponent, BookDetailsComponent],
+  declarations: [
+    AppComponent,
+    RootComponent,
+    AddBookComponent,
+    BookDetailsComponent,
+    NotFoundComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -29,6 +37,7 @@ import { BookDetailsComponent } from './routes/book-details/book-details.compone
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     ToastrModule.forRoot(),
   ],
   providers: [],

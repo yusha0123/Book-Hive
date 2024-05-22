@@ -27,7 +27,7 @@ export class RootComponent implements OnInit {
         this.loading = false;
       },
       error: (err: any) => {
-        this.toastr.error('Failed to get books', 'Something went wrong!');
+        this.toastr.error('Failed to fetch books', 'Something went wrong!');
       },
     });
   }

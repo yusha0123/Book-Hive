@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RootComponent } from './routes/root/root.component';
 import { AddBookComponent } from './routes/add-book/add-book.component';
 import { BookDetailsComponent } from './routes/book-details/book-details.component';
+import { NotFoundComponent } from './routes/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,11 @@ const routes: Routes = [
     path: 'book/:id',
     title: 'BookHive - Book Details',
     component: BookDetailsComponent,
+  },
+  {
+    path: '**',
+    title: 'BookHive - Page not found',
+    component: NotFoundComponent,
   },
 ];
 

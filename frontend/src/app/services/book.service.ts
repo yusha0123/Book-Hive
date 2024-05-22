@@ -20,6 +20,6 @@ export class BookService {
   }
 
   getSingleBook(id: string): Observable<Book> {
-    return this.http.get<Book>(`this.apiUrl/${id}`);
+    return this.http.get<Book>(`${this.apiUrl}/${id}`);
   }
 }

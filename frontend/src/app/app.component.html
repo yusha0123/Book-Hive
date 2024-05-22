@@ -1,7 +1,7 @@
 <main class="w-full h-full overflow-y-auto">
   <nav class="bg-white border-gray-200 border-b sticky top-0 w-full mb-8 z-50">
     <div
-      class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3.5"
+      class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto md:p-3.5 px-3 py-1.5"
     >
       <a class="flex items-center gap-x-1" routerLink="/">
         <svg
@@ -47,6 +47,11 @@
         <a routerLink="/add-book" class="nav-link">Add Book</a>
         <a routerLink="/cart" class="nav-link">Cart</a>
         <a routerLink="/orders" class="nav-link">Orders</a>
+      </div>
+      <div class="md:hidden block">
+        <button mat-icon-button>
+          <i class="pi pi-bars"></i>
+        </button>
       </div>
     </div>
   </nav>
