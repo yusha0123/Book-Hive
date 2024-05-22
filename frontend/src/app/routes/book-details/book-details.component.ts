@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { Book } from 'src/app/interfaces';
 import { BookService } from 'src/app/services/book.service';
 
@@ -12,11 +11,9 @@ export class BookDetailsComponent implements OnInit {
   @Input() id!: string;
   loading: boolean = false;
   book: Book | null = null;
+  notFound: boolean = false;
 
-  constructor(
-    private bookService: BookService,
-    private toastr: ToastrService
-  ) {}
+  constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -24,10 +21,14 @@ export class BookDetailsComponent implements OnInit {
       next: (response: Book | null) => {
         if (response) {
           this.book = response;
+        } else {
+          this.notFound = true;
         }
+        this.loading = false;
       },
       error: () => {
-        this.toastr.error('Failed to fetch Book', 'Something went wrong!');
+        this.notFound = true;
+        this.loading = false;
       },
     });
   }
