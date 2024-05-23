@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Book } from 'src/app/interfaces';
 import { BookService } from 'src/app/services/book.service';
+import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-book-details',
@@ -13,7 +14,10 @@ export class BookDetailsComponent implements OnInit {
   book: Book | null = null;
   notFound: boolean = false;
 
-  constructor(private bookService: BookService) {}
+  constructor(
+    private bookService: BookService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -31,5 +35,13 @@ export class BookDetailsComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  isInCart(book: Book): boolean {
+    return !!this.cartService.cartItems.find((item) => item._id === book._id);
+  }
+
+  onAddToCart(book: Book): void {
+    this.cartService.addToCart(book);
   }
 }

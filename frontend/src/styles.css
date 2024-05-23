@@ -15,7 +15,7 @@ body {
 
 @layer components {
   .nav-link {
-    @apply block p-2.5 hover:bg-gray-100 hover:text-purple-700 text-gray-700 rounded-md transition duration-300 font-medium;
+    @apply p-2.5 hover:bg-gray-100 hover:text-purple-700 rounded-md transition duration-300 font-medium flex items-center gap-1;
   }
 }
 

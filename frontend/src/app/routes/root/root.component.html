@@ -1,4 +1,4 @@
-<section>
+<section class="mt-20 md:mt-24">
   <ng-container *ngIf="!loading; else loadingTemplate">
     <div
       class="max-w-screen-lg mx-auto px-3 md:px-6 xl:px-0 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 overflow-y-auto pb-10"
@@ -15,7 +15,7 @@
         />
         <h3 class="text-[16px]">{{ book.title }}</h3>
         <div class="flex items-center justify-between">
-          <p class="text-[16px] font-bold">&#x20B9;{{ book.price }}</p>
+          <p class="text-[16px] font-bold !m-0">&#x20B9;{{ book.price }}</p>
           <ng-container *ngIf="isInCart(book); else addToCartTemplate">
             <button mat-icon-button (click)="navigateToCart($event)">
               <i class="pi pi-check"></i>
