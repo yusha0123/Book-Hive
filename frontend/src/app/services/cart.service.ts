@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Book, CartItem } from 'src/app/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  constructor() {}
+  constructor(private toastr: ToastrService) {}
 
   cartItems: CartItem[] = [];
 
@@ -29,6 +30,7 @@ export class CartService {
         quantity: 1,
       };
       this.cartItems.push(newItem);
+      this.toastr.success('Item added to cart!');
     }
   }
 
