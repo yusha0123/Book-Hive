@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { slideInOutAnimation } from 'src/app/animations';
+import { ToastrService } from 'ngx-toastr';
 import { CartItem, Order, OrderItem } from 'src/app/interfaces';
 import { CartService } from 'src/app/services/cart.service';
+import { OrderService } from 'src/app/services/order.service';
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
-  animations: [slideInOutAnimation],
 })
 export class CheckoutComponent implements OnInit {
   addressForm: FormGroup;
@@ -16,10 +16,14 @@ export class CheckoutComponent implements OnInit {
   totalPrice: number = 0;
   orderDetails: Order | null = null;
   currentStep: 'address' | 'summary' | 'success' = 'address';
+  loading: boolean = false;
+  response!: Order;
 
   constructor(
     private formBuilder: FormBuilder,
-    private cartService: CartService
+    private cartService: CartService,
+    private orderService: OrderService,
+    private toastr: ToastrService
   ) {
     this.addressForm = this.formBuilder.group({
       address: ['', Validators.required],
@@ -69,10 +73,21 @@ export class CheckoutComponent implements OnInit {
       totalPrice: this.totalPrice,
     };
 
-    console.log(this.orderDetails);
-
     this.currentStep = 'summary';
   }
 
-  onOrderPlace(): void {}
+  onOrderPlace(): void {
+    this.loading = true;
+    this.orderService.createOrder(this.orderDetails!).subscribe({
+      next: (response) => {
+        this.currentStep = 'success';
+        this.loading = false;
+        this.response = response;
+      },
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Failed to create order!');
+      },
+    });
+  }
 }

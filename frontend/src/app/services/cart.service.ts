@@ -30,7 +30,6 @@ export class CartService {
         quantity: 1,
       };
       this.cartItems.push(newItem);
-      console.log(this.cartItems);
       this.toastr.success('Item added to cart!');
     }
   }

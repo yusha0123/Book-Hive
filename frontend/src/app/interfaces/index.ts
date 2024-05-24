@@ -18,6 +18,7 @@ export interface OrderItem {
 }
 
 export interface Order {
+  _id?: string;
   orderItems: OrderItem[];
   shippingAddress: {
     address: string;

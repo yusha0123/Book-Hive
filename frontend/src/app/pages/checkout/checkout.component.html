@@ -79,15 +79,45 @@
         <div
           class="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mt-5 lg:mt-8"
         >
-          <button mat-flat-button color="accent" class="w-full max-w-xs">
+          <button
+            mat-flat-button
+            color="accent"
+            class="w-full max-w-xs"
+            [disabled]="loading"
+            (click)="onOrderPlace()"
+          >
             Place Order
           </button>
           <a routerLink="/" class="w-full max-w-xs">
-            <button mat-flat-button color="warn" class="w-full">Cancel</button>
+            <button
+              mat-flat-button
+              color="warn"
+              class="w-full"
+              [disabled]="loading"
+            >
+              Cancel
+            </button>
           </a>
         </div>
       </div>
       <!-- End of second step -->
+      <!-- Start of third step -->
+      <div
+        *ngIf="currentStep === 'success'"
+        class="h-[70vh] md:h-[60vh] flex flex-col items-center justify-center gap-4"
+      >
+        <img
+          src="/assets/success.svg"
+          alt="success"
+          class="object-cover size-32 md:size-40 xl:size-52"
+        />
+        <p class="font-semibold text-xl md:text-2xl text-center">
+          Order Placed Successfully!
+        </p>
+        <p class="font-medium text-sm lg:text-lg">
+          Order id: {{ response._id }}
+        </p>
+      </div>
     </div>
   </div>
 </section>

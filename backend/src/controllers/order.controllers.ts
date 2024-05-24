@@ -13,7 +13,7 @@ export const createOrder = async (
       return res.status(400).json({ message: "Order items are required!" });
     }
 
-    if (!shippingAddress || totalPrice) {
+    if (!shippingAddress || !totalPrice) {
       return res.status(400).json({ message: "All the fields are required!" });
     }
 
