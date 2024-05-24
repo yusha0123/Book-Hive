@@ -6,10 +6,4 @@ import { CartService } from './services/cart.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  constructor(private cartService: CartService) {}
-
-  get totalCartItems(): number {
-    return this.cartService.getTotalItems();
-  }
-}
+export class AppComponent {}

@@ -10,7 +10,6 @@ const OrderSchema = new mongoose.Schema(
           ref: "Book",
         },
         qty: { type: Number, required: true },
-        price: { type: Number, required: true },
       },
     ],
     shippingAddress: {

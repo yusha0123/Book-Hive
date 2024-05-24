@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CartItem, Order } from 'src/app/interfaces';
+import { slideInOutAnimation } from 'src/app/animations';
+import { CartItem, Order, OrderItem } from 'src/app/interfaces';
 import { CartService } from 'src/app/services/cart.service';
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
+  animations: [slideInOutAnimation],
 })
 export class CheckoutComponent implements OnInit {
   addressForm: FormGroup;
@@ -43,16 +45,34 @@ export class CheckoutComponent implements OnInit {
     this.calculateTotalPrice();
   }
 
+  transformCartItemsToOrderItems(cartItems: CartItem[]): OrderItem[] {
+    return cartItems.map((item) => ({
+      book: item._id as string,
+      qty: item.quantity,
+    }));
+  }
+
   onAddressFormSubmit(): void {
+    if (this.addressForm.invalid) {
+      return;
+    }
+
+    const transformedOrderItems = this.transformCartItemsToOrderItems(
+      this.cartItems
+    );
+
     this.orderDetails = {
       shippingAddress: {
         ...this.addressForm.value,
       },
-      orderItems: this.cartItems,
+      orderItems: transformedOrderItems,
       totalPrice: this.totalPrice,
     };
 
     console.log(this.orderDetails);
+
     this.currentStep = 'summary';
   }
+
+  onOrderPlace(): void {}
 }

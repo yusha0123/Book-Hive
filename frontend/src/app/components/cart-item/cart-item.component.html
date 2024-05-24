@@ -23,6 +23,7 @@
     <div class="flex h-8 text-gray-600 max-w-16">
       <button
         class="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-75 disabled:cursor-not-allowed"
+        [disabled]="cartItem.quantity === 1"
         (click)="decrementItem()"
       >
         -

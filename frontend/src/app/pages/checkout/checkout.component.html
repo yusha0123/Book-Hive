@@ -2,7 +2,9 @@
   <div
     class="w-full max-w-4xl mx-auto pt-20 md:pt-24 px-2 md:px-4 lg:px-6 xl:px-0 pb-10"
   >
-    <div class="w-full bg-white shadow p-3 md:p-5 xl:p-6 rounded-md">
+    <div
+      class="w-full bg-white shadow p-3 md:p-5 xl:p-6 rounded-md overflow-hidden"
+    >
       <!-- First Step -->
       <div *ngIf="currentStep === 'address'">
         <p class="font-semibold text-xl md:text-2xl text-center">
@@ -55,8 +57,8 @@
           </div>
         </form>
       </div>
-      <!-- End of Step 1 -->
-      <!-- Second Step -->
+      <!-- End of first step -->
+      <!-- Second step -->
       <div *ngIf="currentStep === 'summary'">
         <p class="font-semibold text-xl md:text-2xl text-center">
           Cart Summary
@@ -74,17 +76,18 @@
           [totalItems]="cartItems.length"
           [disableEvents]="true"
         />
-        <div class="flex flex-col md:flex-row gap-4 justify-center w-full mt-2">
-          <button mat-flat-button color="accent" class="w-full md:max-w-xs">
+        <div
+          class="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mt-5 lg:mt-8"
+        >
+          <button mat-flat-button color="accent" class="w-full max-w-xs">
             Place Order
           </button>
-          <a routerLink="/">
-            <button mat-flat-button color="warn" class="w-full md:max-w-xs">
-              Cancel
-            </button>
+          <a routerLink="/" class="w-full max-w-xs">
+            <button mat-flat-button color="warn" class="w-full">Cancel</button>
           </a>
         </div>
       </div>
+      <!-- End of second step -->
     </div>
   </div>
 </section>

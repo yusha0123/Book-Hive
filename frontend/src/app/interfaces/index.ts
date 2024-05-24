@@ -12,8 +12,13 @@ export interface CartItem extends Book {
   quantity: number;
 }
 
+export interface OrderItem {
+  book: string;
+  qty: number;
+}
+
 export interface Order {
-  orderItems: CartItem[];
+  orderItems: OrderItem[];
   shippingAddress: {
     address: string;
     city: string;
