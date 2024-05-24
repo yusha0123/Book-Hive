@@ -1,0 +1,90 @@
+<section class="min-h-screen bg-gray-100">
+  <div
+    class="w-full max-w-4xl mx-auto pt-20 md:pt-24 px-2 md:px-4 lg:px-6 xl:px-0 pb-10"
+  >
+    <div class="w-full bg-white shadow p-3 md:p-5 xl:p-6 rounded-md">
+      <!-- First Step -->
+      <div *ngIf="currentStep === 'address'">
+        <p class="font-semibold text-xl md:text-2xl text-center">
+          Fill out your Address
+        </p>
+        <form
+          [formGroup]="addressForm"
+          (ngSubmit)="onAddressFormSubmit()"
+          class="max-w-lg mt-5 mx-auto"
+        >
+          <mat-form-field class="w-full">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              formControlName="address"
+              placeholder="Your address"
+            />
+          </mat-form-field>
+          <mat-form-field class="w-full">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" placeholder="Your city" />
+          </mat-form-field>
+          <mat-form-field class="w-full">
+            <mat-label>Postal Code</mat-label>
+            <input
+              matInput
+              formControlName="postalCode"
+              type="number"
+              placeholder="Your postal code"
+            />
+          </mat-form-field>
+          <mat-form-field class="w-full">
+            <mat-label>Country</mat-label>
+            <input
+              matInput
+              formControlName="country"
+              placeholder="Your country"
+            />
+          </mat-form-field>
+          <div class="w-full flex justify-center">
+            <button
+              mat-flat-button
+              color="primary"
+              class="max-w-sm w-full"
+              type="submit"
+              [disabled]="!addressForm.valid"
+            >
+              Continue
+            </button>
+          </div>
+        </form>
+      </div>
+      <!-- End of Step 1 -->
+      <!-- Second Step -->
+      <div *ngIf="currentStep === 'summary'">
+        <p class="font-semibold text-xl md:text-2xl text-center">
+          Cart Summary
+        </p>
+        <hr class="text-gray-400 my-2" />
+        <p class="text-sm md:text-lg text-center font-medium">
+          Deliver to: {{ orderDetails?.shippingAddress?.address }},
+          {{ orderDetails?.shippingAddress?.city }}
+          {{ orderDetails?.shippingAddress?.postalCode }}
+        </p>
+        <app-cart-item
+          *ngFor="let cartItem of cartItems; index as i"
+          [cartItem]="cartItem"
+          [index]="i"
+          [totalItems]="cartItems.length"
+          [disableEvents]="true"
+        />
+        <div class="flex flex-col md:flex-row gap-4 justify-center w-full mt-2">
+          <button mat-flat-button color="accent" class="w-full md:max-w-xs">
+            Place Order
+          </button>
+          <a routerLink="/">
+            <button mat-flat-button color="warn" class="w-full md:max-w-xs">
+              Cancel
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

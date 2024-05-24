@@ -5,6 +5,7 @@ import { AddBookComponent } from './routes/add-book/add-book.component';
 import { BookDetailsComponent } from './routes/book-details/book-details.component';
 import { NotFoundComponent } from './routes/not-found/not-found.component';
 import { CartComponent } from './routes/cart/cart.component';
+import { CheckoutComponent } from './routes/checkout/checkout.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,11 @@ const routes: Routes = [
     path: 'cart',
     title: 'BookHive - Shopping Cart',
     component: CartComponent,
+  },
+  {
+    path: 'checkout',
+    title: 'BookHive - Checkout',
+    component: CheckoutComponent,
   },
   {
     path: '**',

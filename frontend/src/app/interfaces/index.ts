@@ -11,3 +11,14 @@ export interface Book {
 export interface CartItem extends Book {
   quantity: number;
 }
+
+export interface Order {
+  orderItems: CartItem[];
+  shippingAddress: {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+  totalPrice: number;
+}

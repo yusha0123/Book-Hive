@@ -15,8 +15,10 @@ import { AppComponent } from './app.component';
 import { AddBookComponent } from './routes/add-book/add-book.component';
 import { BookDetailsComponent } from './routes/book-details/book-details.component';
 import { CartComponent } from './routes/cart/cart.component';
+import { CheckoutComponent } from './routes/checkout/checkout.component';
 import { NotFoundComponent } from './routes/not-found/not-found.component';
 import { RootComponent } from './routes/root/root.component';
+import { CartItemComponent } from './components/cart-item/cart-item.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { RootComponent } from './routes/root/root.component';
     BookDetailsComponent,
     NotFoundComponent,
     CartComponent,
+    CheckoutComponent,
+    CartItemComponent,
   ],
   imports: [
     BrowserModule,

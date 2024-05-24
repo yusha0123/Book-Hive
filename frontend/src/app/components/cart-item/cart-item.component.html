@@ -1,0 +1,47 @@
+<div class="p-3 md:p-5 xl:p-6">
+  <div class="flex gap-3 md:gap-5">
+    <div class="shrink-0">
+      <img
+        [src]="cartItem.coverUrl"
+        alt="product-image"
+        class="md:size-32 size-24 max-w-full rounded-lg object-center"
+      />
+    </div>
+    <div class="flex flex-col gap-2 flex-1 truncate">
+      <p
+        class="text-sm md:text-lg lg:text-xl 2xl:text-2xl truncate font-normal !m-0"
+      >
+        {{ cartItem.title }}
+      </p>
+      <p class="text-sm md:text-lg !m-0 font-semibold">
+        &#x20B9;{{ cartItem.price }}
+      </p>
+      <p class="!m-0">Quantity: {{ cartItem.quantity }}</p>
+    </div>
+  </div>
+  <div class="flex items-center justify-between mt-4" *ngIf="!disableEvents">
+    <div class="flex h-8 text-gray-600 max-w-16">
+      <button
+        class="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-75 disabled:cursor-not-allowed"
+        (click)="decrementItem()"
+      >
+        -
+      </button>
+      <div
+        class="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition text-black"
+      >
+        {{ cartItem.quantity }}
+      </div>
+      <button
+        class="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
+        (click)="incrementItem()"
+      >
+        +
+      </button>
+    </div>
+    <button mat-icon-button (click)="removeItem()">
+      <i class="pi pi-trash"></i>
+    </button>
+  </div>
+  <hr *ngIf="isNotLastItem()" class="my-4 border-t border-gray-300" />
+</div>
