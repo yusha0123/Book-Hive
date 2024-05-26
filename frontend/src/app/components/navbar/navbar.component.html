@@ -10,21 +10,19 @@
       >
     </a>
     <div class="w-auto items-center gap-x-8 hidden md:flex">
-      <a routerLink="/" class="nav-link"><i class="pi pi-home"></i>Home</a>
-      <a routerLink="/add-book" class="nav-link"
-        ><i class="pi pi-plus"></i>Add Book</a
-      >
-      <a routerLink="/cart" class="nav-link">
-        <span
-          *ngIf="totalCartItems > 0"
-          class="inline-flex items-center justify-center p-1 px-2 mr-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full"
-          >{{ totalCartItems }}</span
-        ><i class="pi pi-shopping-cart"></i>Cart
-      </a>
-      <a routerLink="/orders" class="nav-link"
-        ><i class="pi pi-box"></i>Orders</a
-      >
+      <ng-container *ngFor="let link of navLinks">
+        <a [routerLink]="link.route" class="nav-link">
+          <i class="{{ link.icon }}"></i>
+          {{ link.label }}
+          <span
+            *ngIf="link.label === 'Cart' && totalCartItems > 0"
+            class="inline-flex items-center justify-center p-1 px-2 w-fit text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full"
+            >{{ totalCartItems }}</span
+          >
+        </a>
+      </ng-container>
     </div>
+    <!-- Hamburger menu -->
     <div class="md:hidden block">
       <button mat-icon-button (click)="toggleNav()">
         <i class="pi pi-bars"></i>
@@ -33,24 +31,37 @@
   </div>
 </nav>
 
-<div
-  *ngIf="isOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
-  (click)="toggleNav()"
-></div>
-
-<section
-  class="top-0 right-0 w-[75%] sm:w-[60%] md:hidden bg-gray-50 rounded-l-md fixed h-full z-[50] ease-in-out duration-500"
-  [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
->
-  <div class="w-full flex justify-start p-2 sm:p-3">
-    <button mat-icon-button (click)="toggleNav()">
-      <i class="pi pi-times" style="color: red"></i>
-    </button>
-  </div>
-  <div class="h-full px-4 py-1 flex flex-col items-center">
-    <app-icon [width]="60" [height]="55" />
-    <h2 class="text-2xl font-semibold tracking-wide mt-1">BookHive</h2>
-  </div>
-  <h2 class="mt-20 text-4xl font-semibold text-white">I am a sidebar</h2>
-</section>
+<!-- Drawer's Backdrop -->
+<ng-container>
+  <div
+    *ngIf="isOpen"
+    class="fixed inset-0 md:hidden bg-black/50 z-40 transition-all duration-500"
+    (click)="toggleNav()"
+  ></div>
+  <!-- Drawer -->
+  <section
+    class="top-0 right-0 w-[75%] sm:w-[60%] md:hidden bg-gray-50 rounded-l-md fixed h-full z-[50] ease-in-out duration-500"
+    [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
+  >
+    <div class="w-full flex justify-start p-2 sm:p-3">
+      <button mat-icon-button (click)="toggleNav()">
+        <i class="pi pi-times" style="color: red"></i>
+      </button>
+    </div>
+    <div class="h-full px-4 py-1 flex flex-col gap-y-2 items-center">
+      <app-icon [width]="60" [height]="55" />
+      <h2 class="text-2xl font-semibold tracking-wide">BookHive</h2>
+      <div class="w-full flex flex-col gap-2 border-t border-gray-200 pt-4">
+        <ng-container *ngFor="let link of navLinks">
+          <div class="nav-link-mobile" (click)="handleNavClick(link.route)">
+            <i class="{{ link.icon }}"></i>
+            {{ link.label }}
+            <span *ngIf="link.label === 'Cart' && totalCartItems > 0">{{
+              totalCartItems
+            }}</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</ng-container>

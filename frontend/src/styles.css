@@ -4,19 +4,9 @@
 @import "primeicons/primeicons.css";
 @import "ngx-toastr/toastr";
 
-* {
-  margin: 0;
-}
-
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   height: 100%;
-}
-
-@layer components {
-  .nav-link {
-    @apply p-2.5 hover:bg-gray-100 hover:text-purple-700 rounded-md transition duration-300 font-medium flex items-center gap-1;
-  }
 }
 
 ::-webkit-scrollbar {

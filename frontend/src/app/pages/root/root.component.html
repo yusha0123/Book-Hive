@@ -15,7 +15,7 @@
         />
         <h3 class="text-[16px]">{{ book.title }}</h3>
         <div class="flex items-center justify-between">
-          <p class="text-[16px] font-bold !m-0">&#x20B9;{{ book.price }}</p>
+          <p class="text-[16px] font-bold">&#x20B9;{{ book.price }}</p>
           <ng-container *ngIf="isInCart(book); else addToCartTemplate">
             <button mat-icon-button (click)="navigateToCart($event)">
               <i class="pi pi-check"></i>
