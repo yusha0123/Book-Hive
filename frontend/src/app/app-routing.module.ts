@@ -1,44 +1,48 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RootComponent } from './pages/root/root.component';
-import { AddBookComponent } from './pages/add-book/add-book.component';
-import { BookDetailsComponent } from './pages/book-details/book-details.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { CartComponent } from './pages/cart/cart.component';
-import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { checkoutGuard } from './guards/checkout-guard.guard';
 
 const routes: Routes = [
   {
     path: '',
     title: 'BookHive',
-    component: RootComponent,
+    loadChildren: () =>
+      import('./pages/root/root.module').then((m) => m.RootModule),
   },
   {
     path: 'add-book',
     title: 'BookHive - Add a Book',
-    component: AddBookComponent,
+    loadChildren: () =>
+      import('./pages/add-book/add-book.module').then((m) => m.AddBookModule),
   },
   {
     path: 'book/:id',
     title: 'BookHive - Book Details',
-    component: BookDetailsComponent,
+    loadChildren: () =>
+      import('./pages/book-details/book-details.module').then(
+        (m) => m.BookDetailsModule
+      ),
   },
   {
     path: 'cart',
     title: 'BookHive - Shopping Cart',
-    component: CartComponent,
+    loadChildren: () =>
+      import('./pages/cart/cart.module').then((m) => m.CartModule),
   },
   {
     path: 'checkout',
     title: 'BookHive - Checkout',
+    loadChildren: () =>
+      import('./pages/checkout/checkout.module').then((m) => m.CheckoutModule),
     canActivate: [checkoutGuard],
-    component: CheckoutComponent,
   },
   {
     path: '**',
     title: 'BookHive - Page not found',
-    component: NotFoundComponent,
+    loadChildren: () =>
+      import('./pages/not-found/not-found.module').then(
+        (m) => m.NotFoundModule
+      ),
   },
 ];
 
