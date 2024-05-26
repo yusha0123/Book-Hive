@@ -1,41 +1,9 @@
-<nav class="bg-white border-gray-200 border-b fixed inset-x-0 z-50">
+<nav class="bg-white border-gray-200 border-b fixed inset-x-0 z-10">
   <div
     class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto md:p-3.5 px-3 py-1.5"
   >
     <a class="flex items-center gap-x-1" routerLink="/">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 64 64"
-        width="50"
-        height="45"
-      >
-        <g>
-          <rect width="58" height="40" x="3" y="15" fill="#007579"></rect>
-          <path
-            fill="#ff6243"
-            d="M32,55a4,4,0,0,0-4-4H7V11H18V47h6A8,8,0,0,1,32,55Z"
-          ></path>
-          <path
-            fill="#ffa733"
-            d="M57,11V51H36a4,4,0,0,0-4,4V15a4,4,0,0,1,4-4Z"
-          ></path>
-          <path
-            fill="#ffdaaa"
-            d="M32,15V55a8,8,0,0,0-8-8H18V7h6A8,8,0,0,1,32,15Z"
-          ></path>
-          <polygon
-            fill="#006df0"
-            points="17 51 17 59 14 56 11 59 11 51 17 51"
-          ></polygon>
-          <rect width="6" height="8" x="47" y="51" fill="#46f8ff"></rect>
-          <polygon
-            fill="#ffda44"
-            points="53 11 53 26 48 22 43 26 43 11 53 11"
-          ></polygon>
-          <rect width="6" height="1" x="47" y="51" fill="#00d7df"></rect>
-          <rect width="6" height="1" x="11" y="51" fill="#005ece"></rect>
-        </g>
-      </svg>
+      <app-icon [width]="50" [height]="45" />
       <span
         class="self-center text-2xl font-semibold whitespace-nowrap hidden md:block"
         >BookHive</span
@@ -58,9 +26,31 @@
       >
     </div>
     <div class="md:hidden block">
-      <button mat-icon-button>
+      <button mat-icon-button (click)="toggleNav()">
         <i class="pi pi-bars"></i>
       </button>
     </div>
   </div>
 </nav>
+
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+  (click)="toggleNav()"
+></div>
+
+<section
+  class="top-0 right-0 w-[75%] sm:w-[60%] md:hidden bg-gray-50 rounded-l-md fixed h-full z-[50] ease-in-out duration-500"
+  [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
+>
+  <div class="w-full flex justify-start p-2 sm:p-3">
+    <button mat-icon-button (click)="toggleNav()">
+      <i class="pi pi-times" style="color: red"></i>
+    </button>
+  </div>
+  <div class="h-full px-4 py-1 flex flex-col items-center">
+    <app-icon [width]="60" [height]="55" />
+    <h2 class="text-2xl font-semibold tracking-wide mt-1">BookHive</h2>
+  </div>
+  <h2 class="mt-20 text-4xl font-semibold text-white">I am a sidebar</h2>
+</section>

@@ -6,6 +6,7 @@ import { BookDetailsComponent } from './pages/book-details/book-details.componen
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { checkoutGuard } from './guards/checkout-guard.guard';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
   {
     path: 'checkout',
     title: 'BookHive - Checkout',
+    canActivate: [checkoutGuard],
     component: CheckoutComponent,
   },
   {

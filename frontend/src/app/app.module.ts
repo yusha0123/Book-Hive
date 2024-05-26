@@ -20,6 +20,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { RootComponent } from './pages/root/root.component';
 import { CartItemComponent } from './components/cart-item/cart-item.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { IconComponent } from './components/icon/icon.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     CheckoutComponent,
     CartItemComponent,
     NavbarComponent,
+    IconComponent,
   ],
   imports: [
     BrowserModule,
