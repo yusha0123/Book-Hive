@@ -17,6 +17,6 @@ app.use(
 
 app.use(express.json());
 app.get("/", (_, res) => res.send("Hello from Express!"));
-app.use("/api", router());
+app.use("/api", router);
 
 app.listen(Port, () => console.log(`Server listening on port: ${Port}`));
