@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { CreateBookRequestBody } from "types";
+import { CreateBookRequestBody } from "types.js";
 import { Types } from "mongoose";
-import Book from "../models/book";
+import Book from "models/book.js";
 
 export const createBook = async (
   req: Request<{}, {}, CreateBookRequestBody>,

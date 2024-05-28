@@ -1,4 +1,4 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+import KcAdminClient from "@keycloak/keycloak-admin-client";
 
 export const keycloakConfig = {
   baseUrl: process.env.KEY_CLOAK_BASE_URL,
@@ -7,7 +7,7 @@ export const keycloakConfig = {
   clientSecret: process.env.KEY_CLOAK_CLIENT_SECRET,
 };
 
-export const keycloakAdmin = new KeycloakAdminClient({
+export const keycloakAdmin = new KcAdminClient({
   baseUrl: keycloakConfig.baseUrl,
   realmName: keycloakConfig.realmName,
 });

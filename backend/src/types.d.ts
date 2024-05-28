@@ -27,3 +27,14 @@ type CreateBookRequestBody = {
   description: string;
   coverUrl: string;
 };
+
+type LoginRequestBody = {
+  username: string;
+  password: string;
+};
+
+type RegisterRequestBody = LoginRequestBody & {
+  email: string;
+  firstname: string;
+  lastname: string;
+};
