@@ -12,9 +12,9 @@ export const authKcAdmin = async (
       clientId: keycloakConfig.clientId,
       clientSecret: keycloakConfig.clientSecret,
     });
-
     next();
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Failed to authenticate with Keycloak!" });
   }
 };

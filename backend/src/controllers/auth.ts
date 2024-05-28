@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import { LoginRequestBody, RegisterRequestBody } from "types.js";
-import { keycloakAdmin, keycloakConfig } from "../utils/keyCloak.js";
+import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
 
 export const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
@@ -18,8 +18,8 @@ export const register = async (
 
   try {
     const newUser = await keycloakAdmin.users.create({
-      username,
-      email,
+      username: username,
+      email: email,
       firstName: firstname,
       lastName: lastname,
       enabled: true,
@@ -33,6 +33,7 @@ export const register = async (
     });
     res.status(201).json(newUser);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Something went wrong!" });
   }
 };
@@ -68,6 +69,7 @@ export const login = async (
     );
     res.status(200).json(response.data);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Something went wrong!" });
   }
 };

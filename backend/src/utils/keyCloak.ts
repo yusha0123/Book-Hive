@@ -1,4 +1,6 @@
 import KcAdminClient from "@keycloak/keycloak-admin-client";
+import { config } from "dotenv";
+config();
 
 export const keycloakConfig = {
   baseUrl: process.env.KEY_CLOAK_BASE_URL,
