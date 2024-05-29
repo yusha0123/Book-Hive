@@ -1,16 +1,9 @@
-import { Request, Response } from "express";
 import axios from "axios";
-import jwt from "jsonwebtoken";
-import {
-  CreateBookRequestBody,
-  LoginRequestBody,
-  openIdResponse,
-  TokenPayload,
-} from "types.js";
-import { keycloakConfig } from "utils/keyCloak.js";
+import { Request, Response } from "express";
+import { verifyToken } from "helpers/verifyToken.js";
 import Book from "models/book.js";
-
-const publicKey = `-----BEGIN PUBLIC KEY-----\n${process.env.KEY_CLOAK_PUBLIC_KEY}\n-----END PUBLIC KEY-----`;
+import { Book as TBook, LoginRequestBody, openIdResponse } from "types.js";
+import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
 
 export const loginAdmin = async (
   req: Request<{}, {}, LoginRequestBody>,
@@ -41,18 +34,12 @@ export const loginAdmin = async (
       }
     );
     const { access_token } = response.data as openIdResponse;
-    //decode the access token
-    const decodedToken = jwt.verify(access_token, publicKey, {
-      algorithms: ["RS256"],
-    });
+    const { isAdmin, error, statusCode } = verifyToken(access_token);
 
-    const { realm_access } = decodedToken as TokenPayload;
-    //check if the access token has admin as a payload
-    const isAdmin = realm_access?.roles.includes("admin");
     if (!isAdmin) {
-      return res.status(403).json({
+      return res.status(statusCode || 403).json({
         success: false,
-        message: "Access forbidden: You are not an admin!",
+        message: error || "Unauthorized access!",
       });
     }
 
@@ -80,7 +67,7 @@ export const loginAdmin = async (
 };
 
 export const createBook = async (
-  req: Request<{}, {}, CreateBookRequestBody>,
+  req: Request<{}, {}, TBook>,
   res: Response
 ) => {
   try {
@@ -105,6 +92,97 @@ export const createBook = async (
     res.status(201).json(book);
   } catch (error) {
     res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const updateBook = async (
+  req: Request<{ id: string }, {}, TBook>,
+  res: Response
+) => {
+  const id = req.params.id;
+
+  try {
+    const { title, author, genre, price, description, coverUrl } = req.body;
+
+    if (!title || !author || !genre || !price || !description || !coverUrl) {
+      return res.status(400).json({
+        success: false,
+        message: "All the fields are required!",
+      });
+    }
+
+    const book = await Book.findByIdAndUpdate(
+      id,
+      { title, author, price, genre, description, coverUrl },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found!",
+      });
+    }
+
+    return res.json(book);
+  } catch (error) {
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid book ID!",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const deleteBook = async (
+  req: Request<{ id: string }, {}>,
+  res: Response
+) => {
+  const id = req.params.id;
+  try {
+    const result = await Book.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found!",
+      });
+    }
+
+    return res.json({ success: true, message: "Book deleted successfully!" });
+  } catch (error) {
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid book ID!",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await keycloakAdmin.users.find({});
+    res.json(users);
+  } catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

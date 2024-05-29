@@ -19,7 +19,7 @@ type OrderRequestBody = {
   totalPrice: number;
 };
 
-type CreateBookRequestBody = {
+type Book = {
   title: string;
   author: string;
   genre: string;

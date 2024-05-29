@@ -91,3 +91,31 @@ export const login = async (
     }
   }
 };
+
+export const refreshToken = async (
+  req: Request<{}, {}, { refreshToken: string }>,
+  res: Response
+) => {
+  const { refreshToken } = req.body;
+  try {
+    const { data } = await axios.post(
+      `${keycloakConfig.baseUrl}/realms/${keycloakConfig.realmName}/protocol/openid-connect/token`,
+      {
+        grant_type: "refresh_token",
+        client_id: keycloakConfig.clientId,
+        client_secret: keycloakConfig.clientSecret,
+        refresh_token: refreshToken,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    res.json(data);
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    res.status(500).json({ error: "Failed to refresh token!" });
+  }
+};
