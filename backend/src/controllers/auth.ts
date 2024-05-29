@@ -30,6 +30,7 @@ export const register = async (
           temporary: false,
         },
       ],
+      emailVerified: true,
     });
     res.status(201).json(newUser);
   } catch (error) {
@@ -67,9 +68,26 @@ export const login = async (
         },
       }
     );
-    res.status(200).json(response.data);
+
+    res.json(response.data);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Something went wrong!" });
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 401) {
+        res.status(401).json({
+          success: false,
+          message: "Invalid user credentials!",
+        });
+      } else {
+        console.log(error.response.data);
+        res.status(error.response.status).json({
+          success: false,
+          message:
+            error.response.data.error_description || "Something went wrong!",
+        });
+      }
+    } else {
+      console.log(error);
+      res.status(500).json({ error: "Something went wrong!" });
+    }
   }
 };
