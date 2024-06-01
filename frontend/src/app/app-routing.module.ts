@@ -10,12 +10,6 @@ const routes: Routes = [
       import('./pages/root/root.module').then((m) => m.RootModule),
   },
   {
-    path: 'add-book',
-    title: 'BookHive - Add a Book',
-    loadChildren: () =>
-      import('./pages/add-book/add-book.module').then((m) => m.AddBookModule),
-  },
-  {
     path: 'book/:id',
     title: 'BookHive - Book Details',
     loadChildren: () =>

@@ -17,7 +17,10 @@ export const isAdmin = async (
   let token = req.headers["authorization"];
 
   if (!token) {
-    return res.status(401).json({ message: "No token provided" });
+    return res.status(401).json({
+      message:
+        "Access Denied: You need to be authorized to access this resource!",
+    });
   }
 
   try {
@@ -40,6 +43,8 @@ export const isAdmin = async (
 
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Invalid token provided!" });
+    return res
+      .status(401)
+      .json({ message: "Invalid or expired token. Please log in again." });
   }
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Request, Response } from "express";
 import { verifyToken } from "helpers/verifyToken.js";
+import { nodeCache } from "index.js";
 import Book from "models/book.js";
 import { Book as TBook, LoginRequestBody, openIdResponse } from "types.js";
 import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
@@ -179,7 +180,15 @@ export const deleteBook = async (
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await keycloakAdmin.users.find({});
+    let users;
+
+    if (nodeCache.has("users")) {
+      users = JSON.parse(nodeCache.get("users"));
+    } else {
+      users = await keycloakAdmin.users.find({});
+      nodeCache.set("users", JSON.stringify(users));
+    }
+
     res.json(users);
   } catch (error) {
     return res.status(500).json({

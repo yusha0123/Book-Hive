@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { LoginRequestBody, RegisterRequestBody } from "types.js";
 import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
+import { nodeCache } from "index.js";
 
 export const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
@@ -32,6 +33,7 @@ export const register = async (
       ],
       emailVerified: true,
     });
+    nodeCache.del("users");
     res.status(201).json(newUser);
   } catch (error) {
     console.log(error);

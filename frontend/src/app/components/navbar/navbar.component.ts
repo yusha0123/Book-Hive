@@ -18,7 +18,6 @@ export class NavbarComponent {
 
   navLinks: { route: string; label: string; icon: string }[] = [
     { route: '/', label: 'Home', icon: 'pi pi-home' },
-    { route: '/add-book', label: 'Add Book', icon: 'pi pi-plus' },
     { route: '/cart', label: 'Cart', icon: 'pi pi-shopping-cart' },
     { route: '/orders', label: 'Orders', icon: 'pi pi-box' },
   ];
