@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import { verifyToken } from "helpers/index.js";
+import { isAdminUser, verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
 import Book from "models/book.js";
 import { Book as TBook, LoginRequestBody, openIdResponse } from "types.js";
@@ -35,12 +35,12 @@ export const loginAdmin = async (
       }
     );
     const { access_token } = response.data as openIdResponse;
-    const { isAdmin, error, statusCode } = verifyToken(access_token);
+    const { decodedToken } = verifyToken(access_token);
 
-    if (!isAdmin) {
-      return res.status(statusCode || 403).json({
+    if (!isAdminUser(decodedToken)) {
+      return res.status(403).json({
         success: false,
-        message: error || "Unauthorized access!",
+        message: "Access forbidden: You are not an Admin!",
       });
     }
 
@@ -53,7 +53,6 @@ export const loginAdmin = async (
           message: "Invalid user credentials!",
         });
       } else {
-        console.log(error.response.data);
         res.status(error.response.status).json({
           success: false,
           message:
@@ -61,7 +60,6 @@ export const loginAdmin = async (
         });
       }
     } else {
-      console.log(error);
       res.status(500).json({ error: "Something went wrong!" });
     }
   }
