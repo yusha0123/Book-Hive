@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 
 export const getBooks = async (req: Request, res: Response) => {
   try {
-    const books = await Book.find();
+    const books = await Book.find().sort({ createdAt: -1 });
     res.json(books);
   } catch (error) {
     res.status(500).json({

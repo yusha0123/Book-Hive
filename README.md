@@ -28,18 +28,26 @@ BookHive/
 
    ```
    MONGO_URI=mongodb://your_mongo_host:port/your_database_name
-   origin=http://localhost:4200  # Adjust for your frontend origin if needed
+   origin=http://localhost:4200  # Adjust for your frontend origin if
+   needed
+   KEY_CLOAK_CLIENT_ID=your_client_id # Client ID from Keycloak for your application
+   KEY_CLOAK_CLIENT_SECRET=your_client_secret # Client secret from Keycloak for your application
+   KEY_CLOAK_REALM=your_realm # Keycloak realm name
+   KEY_CLOAK_BASE_URL=http://keycloak_host/auth # Base URL for your Keycloak instance, typically including /auth
+   KEY_CLOAK_PUBLIC_KEY=your_public_key # Public key from Keycloak for token validation
    ```
 
-   - Replace `mongodb://your_mongo_host:port/your_database_name` with your actual MongoDB connection string.
-   - Update `origin` to match the allowed origin for CORS (Cross-Origin Resource Sharing) if your frontend is served from a different domain or port.
+````
+
+- Replace `mongodb://your_mongo_host:port/your_database_name` with your actual MongoDB connection string.
+- Update `origin` to match the allowed origin for CORS (Cross-Origin Resource Sharing) if your frontend is served from a different domain or port.
 
 2. **Install Dependencies:**
-   Navigate to the `backend` directory and run:
+Navigate to the `backend` directory and run:
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+````
 
 3. **Start the Development Server:**
    Once the dependencies are installed, start the backend server in development mode:
