@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import { verifyToken } from "helpers/verifyToken.js";
+import { verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
 import Book from "models/book.js";
 import { Book as TBook, LoginRequestBody, openIdResponse } from "types.js";

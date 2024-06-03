@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "helpers/verifyToken.js";
+import { isAdminUser, verifyToken } from "helpers/index.js";
 
 interface CustomRequest extends Request {
   user?: {
@@ -25,11 +25,19 @@ export const isAdmin = async (
 
   try {
     token = token.split(" ")[1];
-    const { isAdmin, decodedToken, statusCode, error } = verifyToken(token);
-    if (!isAdmin) {
-      return res.status(statusCode).json({
+    const { decodedToken, error } = verifyToken(token);
+
+    if (error) {
+      return res.status(401).json({
         success: false,
         message: error,
+      });
+    }
+
+    if (!isAdminUser(decodedToken)) {
+      return res.status(403).json({
+        success: false,
+        message: "Access forbidden: You are not an Admin!",
       });
     }
 

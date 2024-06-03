@@ -24,12 +24,12 @@ BookHive/
 **Backend Setup:**
 
 1. **Environment Variables:**
+
    Create a `.env` file in the `backend` directory to store sensitive configuration details. This file should not be committed to version control. Here's an example structure:
 
    ```
    MONGO_URI=mongodb://your_mongo_host:port/your_database_name
-   origin=http://localhost:4200  # Adjust for your frontend origin if
-   needed
+   origin=http://localhost:4200  # Adjust for your frontend origin if needed
    KEY_CLOAK_CLIENT_ID=your_client_id # Client ID from Keycloak for your application
    KEY_CLOAK_CLIENT_SECRET=your_client_secret # Client secret from Keycloak for your application
    KEY_CLOAK_REALM=your_realm # Keycloak realm name
@@ -37,19 +37,20 @@ BookHive/
    KEY_CLOAK_PUBLIC_KEY=your_public_key # Public key from Keycloak for token validation
    ```
 
-````
-
-- Replace `mongodb://your_mongo_host:port/your_database_name` with your actual MongoDB connection string.
-- Update `origin` to match the allowed origin for CORS (Cross-Origin Resource Sharing) if your frontend is served from a different domain or port.
+   - Replace `mongodb://your_mongo_host:port/your_database_name` with your actual MongoDB connection string.
+   - Update `origin` to match the allowed origin for CORS (Cross-Origin Resource Sharing) if your frontend is served from a different domain or port.
+   - Add your Keycloak configuration.
 
 2. **Install Dependencies:**
-Navigate to the `backend` directory and run:
 
-```bash
-npm install
-````
+   Navigate to the `backend` directory and run:
+
+   ```bash
+   npm install
+   ```
 
 3. **Start the Development Server:**
+
    Once the dependencies are installed, start the backend server in development mode:
 
    ```bash
@@ -61,6 +62,7 @@ npm install
 **Frontend Setup:**
 
 1. **Install Dependencies:**
+
    Navigate to the `frontend` directory and run:
 
    ```bash
@@ -68,6 +70,7 @@ npm install
    ```
 
 2. **Start the Development Server:**
+
    After installation, start the Angular development server:
 
    ```bash
