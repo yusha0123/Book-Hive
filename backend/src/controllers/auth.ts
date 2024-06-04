@@ -1,8 +1,13 @@
-import { Request, Response } from "express";
 import axios from "axios";
-import { LoginRequestBody, RegisterRequestBody } from "types.js";
-import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
+import { Request, Response } from "express";
+import { verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
+import {
+  LoginRequestBody,
+  openIdResponse,
+  RegisterRequestBody,
+} from "types.js";
+import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
 
 export const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
@@ -70,8 +75,21 @@ export const login = async (
         },
       }
     );
+    const { access_token } = response.data as openIdResponse;
+    const { decodedToken, error } = verifyToken(access_token);
 
-    res.json(response.data);
+    if (error) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid or expired token. Please log in again.",
+      });
+    }
+
+    res.json({
+      ...response.data,
+      name: decodedToken?.name,
+      email: decodedToken?.email,
+    });
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       if (error.response.status === 401) {

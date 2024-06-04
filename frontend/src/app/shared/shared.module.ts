@@ -11,15 +11,27 @@ import { CartItemComponent } from '../components/cart-item/cart-item.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { IconComponent } from '../components/icon/icon.component';
 import { RouterModule } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
+import { LoginComponent } from '../components/login/login.component';
+import { RegisterComponent } from '../components/register/register.component';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { ngxUiLoaderConfig } from '../constants';
 
 @NgModule({
-  declarations: [CartItemComponent, NavbarComponent, IconComponent],
+  declarations: [
+    CartItemComponent,
+    NavbarComponent,
+    IconComponent,
+    LoginComponent,
+    RegisterComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
     MatInputModule,
+    MatTabsModule,
     MatFormFieldModule,
     MatButtonModule,
     MatProgressSpinnerModule,
@@ -27,6 +39,7 @@ import { RouterModule } from '@angular/router';
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
     }),
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
   ],
   exports: [
     CommonModule,
@@ -41,6 +54,10 @@ import { RouterModule } from '@angular/router';
     CartItemComponent,
     NavbarComponent,
     IconComponent,
+    MatTabsModule,
+    LoginComponent,
+    RegisterComponent,
+    NgxUiLoaderModule,
   ],
 })
 export class SharedModule {}

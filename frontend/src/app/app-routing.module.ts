@@ -7,34 +7,42 @@ const routes: Routes = [
     path: '',
     title: 'BookHive',
     loadChildren: () =>
-      import('./pages/root/root.module').then((m) => m.RootModule),
+      import('./features/root/root.module').then((m) => m.RootModule),
   },
   {
     path: 'book/:id',
     title: 'BookHive - Book Details',
     loadChildren: () =>
-      import('./pages/book-details/book-details.module').then(
+      import('./features/book-details/book-details.module').then(
         (m) => m.BookDetailsModule
       ),
+  },
+  {
+    path: 'sign-in',
+    title: 'Bookhive Sign In',
+    loadChildren: () =>
+      import('./features/sign-in/sign-in.module').then((m) => m.SignInModule),
   },
   {
     path: 'cart',
     title: 'BookHive - Shopping Cart',
     loadChildren: () =>
-      import('./pages/cart/cart.module').then((m) => m.CartModule),
+      import('./features/cart/cart.module').then((m) => m.CartModule),
   },
   {
     path: 'checkout',
     title: 'BookHive - Checkout',
     loadChildren: () =>
-      import('./pages/checkout/checkout.module').then((m) => m.CheckoutModule),
+      import('./features/checkout/checkout.module').then(
+        (m) => m.CheckoutModule
+      ),
     canActivate: [checkoutGuard],
   },
   {
     path: '**',
     title: 'BookHive - Page not found',
     loadChildren: () =>
-      import('./pages/not-found/not-found.module').then(
+      import('./features/not-found/not-found.module').then(
         (m) => m.NotFoundModule
       ),
   },
