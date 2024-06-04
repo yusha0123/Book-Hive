@@ -21,6 +21,13 @@
           >
         </a>
       </ng-container>
+      <button
+        class="nav-link"
+        (click)="logout()"
+        *ngIf="(isLoggedIn$ | async) === true"
+      >
+        <i class="pi pi-sign-out"></i>Logout
+      </button>
     </div>
     <!-- Hamburger menu -->
     <div class="md:hidden block">

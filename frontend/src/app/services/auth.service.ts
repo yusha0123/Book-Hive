@@ -11,9 +11,9 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-import { API_URL } from '../constants';
+import { apiUrl } from '../constants';
 import { extractErrorMessage } from '../helpers';
-import { LoginResponse, User } from '../interfaces';
+import { LoginData, LoginResponse, RegisterData, User } from '../interfaces';
 
 interface RegisterReponse {
   id: string;
@@ -52,15 +52,10 @@ export class AuthService {
     return this.isAuthenticated.asObservable();
   }
 
-  register(user: {
-    username: string;
-    password: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-  }): Observable<RegisterReponse> {
+  register(user: RegisterData): Observable<RegisterReponse> {
+    this.ngxLoader.start();
     return this.httpClient
-      .post<RegisterReponse>(`${API_URL}/auth/register`, user)
+      .post<RegisterReponse>(`${apiUrl}/auth/register`, user)
       .pipe(
         tap(() =>
           this.toastr.success('You can login now.', 'Registration Successful!')
@@ -74,13 +69,10 @@ export class AuthService {
       );
   }
 
-  login(user: {
-    username: string;
-    password: string;
-  }): Observable<LoginResponse> {
+  login(user: LoginData): Observable<LoginResponse> {
     this.ngxLoader.start();
     return this.httpClient
-      .post<LoginResponse>(`${API_URL}/auth/login`, user)
+      .post<LoginResponse>(`${apiUrl}/auth/login`, user)
       .pipe(
         tap((response) => this.handleSuccess(response)),
         catchError((error) => {
@@ -94,6 +86,7 @@ export class AuthService {
 
   private handleSuccess(response: LoginResponse) {
     this.router.navigate(['/']);
+    this.toastr.success(`Welcome back ${response.name}`);
     localStorage.setItem(
       'user',
       JSON.stringify({
@@ -110,6 +103,6 @@ export class AuthService {
     localStorage.removeItem('user');
     this.user.next(null);
     this.isAuthenticated.next(false);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 }

@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RegisterData } from 'src/app/interfaces';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -7,9 +9,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
+  @Output() registrationSuccess = new EventEmitter<void>();
+
   registerForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {
     this.registerForm = this.formBuilder.group({
       username: [
         '',
@@ -23,11 +30,21 @@ export class RegisterComponent {
         '',
         [Validators.required, Validators.email, Validators.minLength(5)],
       ],
-      firstName: ['', [Validators.required, Validators.minLength(3)]],
-      lastName: ['', [Validators.required, Validators.minLength(3)]],
+      firstname: ['', [Validators.required, Validators.minLength(3)]],
+      lastname: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  onSubmit(): void {}
+  onSubmit(): void {
+    const data: RegisterData = this.registerForm.value;
+
+    this.authService.register(data).subscribe({
+      next: () => {
+        this.registrationSuccess.emit();
+        this.registerForm.reset();
+      },
+      error: () => this.registerForm.reset(),
+    });
+  }
 }

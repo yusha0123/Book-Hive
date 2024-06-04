@@ -1,5 +1,7 @@
 import { Component, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 import { CartService } from 'src/app/services/cart.service';
 
 @Component({
@@ -8,13 +10,17 @@ import { CartService } from 'src/app/services/cart.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
+  isOpen: boolean = false;
+  isLoggedIn$: Observable<boolean>;
+
   constructor(
     private cartService: CartService,
     private renderer: Renderer2,
-    private router: Router
-  ) {}
-
-  isOpen: boolean = false;
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.isLoggedIn$ = this.authService.getAuthState();
+  }
 
   navLinks: { route: string; label: string; icon: string }[] = [
     { route: '/', label: 'Home', icon: 'pi pi-home' },
@@ -38,5 +44,9 @@ export class NavbarComponent {
   handleNavClick(route: string): void {
     this.toggleNav();
     this.router.navigate([route]);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

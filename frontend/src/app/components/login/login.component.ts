@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginData } from 'src/app/interfaces';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +11,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {
     this.loginForm = this.formBuilder.group({
       username: [
         '',
@@ -23,5 +28,11 @@ export class LoginComponent {
     });
   }
 
-  onSubmit(): void {}
+  onSubmit(): void {
+    const data: LoginData = this.loginForm.value;
+
+    this.authService.login(data).subscribe({
+      error: () => this.loginForm.reset(),
+    });
+  }
 }

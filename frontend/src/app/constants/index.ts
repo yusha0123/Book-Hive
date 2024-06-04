@@ -27,5 +27,3 @@ export const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   maxTime: -1,
   minTime: 300,
 };
-
-export const API_URL = 'http://localhost:3000/api/admin';

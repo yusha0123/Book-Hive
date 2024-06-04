@@ -48,3 +48,14 @@ export interface User {
   name: string;
   email: string;
 }
+
+export interface LoginData {
+  username: string;
+  password: string;
+}
+
+export interface RegisterData extends LoginData {
+  email: string;
+  firstname: string;
+  lastname: string;
+}
