@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { checkoutGuard } from './guards/checkout-guard.guard';
 
 const routes: Routes = [
   {
@@ -36,7 +35,6 @@ const routes: Routes = [
       import('./features/checkout/checkout.module').then(
         (m) => m.CheckoutModule
       ),
-    canActivate: [checkoutGuard],
   },
   {
     path: '**',

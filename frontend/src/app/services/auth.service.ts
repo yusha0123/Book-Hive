@@ -99,6 +99,10 @@ export class AuthService {
     this.isAuthenticated.next(true);
   }
 
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('user');
+  }
+
   logout() {
     localStorage.removeItem('user');
     this.user.next(null);

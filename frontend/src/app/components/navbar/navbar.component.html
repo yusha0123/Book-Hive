@@ -10,6 +10,17 @@
       >
     </a>
     <div class="w-auto items-center gap-x-8 hidden md:flex">
+      <a
+        routerLink="sign-in"
+        class="nav-link"
+        *ngIf="(isLoggedIn$ | async) === false"
+        ><i class="pi pi-sign-in"></i>Sign In</a
+      >
+      <button class="nav-link" *ngIf="isLoggedIn$ | async">
+        <i class="pi pi-user"></i>
+        {{ (user$ | async)?.name | firstWord }}
+      </button>
+
       <ng-container *ngFor="let link of navLinks">
         <a [routerLink]="link.route" class="nav-link">
           <i class="{{ link.icon }}"></i>
@@ -21,11 +32,7 @@
           >
         </a>
       </ng-container>
-      <button
-        class="nav-link"
-        (click)="logout()"
-        *ngIf="(isLoggedIn$ | async) === true"
-      >
+      <button class="nav-link" (click)="logout()" *ngIf="isLoggedIn$ | async">
         <i class="pi pi-sign-out"></i>Logout
       </button>
     </div>

@@ -1,6 +1,7 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/interfaces';
 import { AuthService } from 'src/app/services/auth.service';
 import { CartService } from 'src/app/services/cart.service';
 
@@ -9,9 +10,11 @@ import { CartService } from 'src/app/services/cart.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isOpen: boolean = false;
   isLoggedIn$: Observable<boolean>;
+  user$: Observable<User | null>;
+  navLinks!: { route: string; label: string; icon: string }[];
 
   constructor(
     private cartService: CartService,
@@ -20,13 +23,16 @@ export class NavbarComponent {
     private authService: AuthService
   ) {
     this.isLoggedIn$ = this.authService.getAuthState();
+    this.user$ = this.authService.getUser();
   }
 
-  navLinks: { route: string; label: string; icon: string }[] = [
-    { route: '/', label: 'Home', icon: 'pi pi-home' },
-    { route: '/cart', label: 'Cart', icon: 'pi pi-shopping-cart' },
-    { route: '/orders', label: 'Orders', icon: 'pi pi-box' },
-  ];
+  ngOnInit() {
+    this.navLinks = [
+      { route: '/', label: 'Home', icon: 'pi pi-home' },
+      { route: '/cart', label: 'Cart', icon: 'pi pi-shopping-cart' },
+      { route: '/orders', label: 'Orders', icon: 'pi pi-box' },
+    ];
+  }
 
   get totalCartItems(): number {
     return this.cartService.getTotalItems();
