@@ -1,5 +1,5 @@
 <div
-  *ngIf="cartItems.length === 0; else cartItemsTemplate"
+  *ngIf="!cart || cart.items.length === 0; else cartItemsTemplate"
   class="h-[100dvh] w-full flex items-center justify-center"
 >
   <p class="text-2xl md:text-3xl font-medium text-center">
@@ -15,14 +15,14 @@
       <!-- Start of cart item card -->
       <div class="w-full md:w-2/3 bg-white shadow h-fit">
         <app-cart-item
-          *ngFor="let cartItem of cartItems; index as i"
+          *ngFor="let cartItem of cart.items; index as i"
           [cartItem]="cartItem"
           [index]="i"
-          [totalItems]="cartItems.length"
-          (increment)="incrementItem(cartItem._id!)"
-          (decrement)="decrementItem(cartItem._id!)"
-          (remove)="removeItem(cartItem._id!)"
+          [totalItems]="cart.items.length"
           [disableEvents]="false"
+          (increment)="incrementItem(cartItem.book._id!)"
+          (decrement)="decrementItem(cartItem.book._id!)"
+          (remove)="removeItem(cartItem.book._id!)"
         />
       </div>
       <!-- End of cart item card -->
@@ -35,7 +35,7 @@
         </h3>
         <hr class="text-gray-900" />
         <div class="flex items justify-between mt-2">
-          <p>Price ({{ cartItems.length }} items)</p>
+          <p>Price ({{ cart.items.length }} items)</p>
           <p>&#x20B9;{{ totalPrice }}</p>
         </div>
         <div class="flex items-center justify-between">

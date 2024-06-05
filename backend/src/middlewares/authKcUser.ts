@@ -23,11 +23,13 @@ export const authKcUser = (
     });
   }
   try {
+    token = token.split(" ")[1];
     const { decodedToken, error } = verifyToken(token);
+
     if (error) {
       return res.status(401).json({
         success: false,
-        message: "Invalid or expired token. Please log in again.",
+        message: error,
       });
     }
 

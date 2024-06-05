@@ -34,44 +34,44 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCartItems();
+    // this.loadCartItems();
   }
 
-  calculateTotalPrice(): void {
-    this.totalPrice = this.cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  }
+  // calculateTotalPrice(): void {
+  //   this.totalPrice = this.cartItems.reduce(
+  //     (total, item) => total + item.price * item.quantity,
+  //     0
+  //   );
+  // }
 
-  loadCartItems(): void {
-    this.cartItems = this.cartService.cartItems;
-    this.calculateTotalPrice();
-  }
+  // loadCartItems(): void {
+  //   this.cartItems = this.cartService.cartItems;
+  //   this.calculateTotalPrice();
+  // }
 
-  transformCartItemsToOrderItems(cartItems: CartItem[]): OrderItem[] {
-    return cartItems.map((item) => ({
-      book: item._id as string,
-      qty: item.quantity,
-    }));
-  }
+  // transformCartItemsToOrderItems(cartItems: CartItem[]): OrderItem[] {
+  //   return cartItems.map((item) => ({
+  //     book: item._id as string,
+  //     qty: item.quantity,
+  //   }));
+  // }
 
   onAddressFormSubmit(): void {
     if (this.addressForm.invalid) {
       return;
     }
 
-    const transformedOrderItems = this.transformCartItemsToOrderItems(
-      this.cartItems
-    );
+    // const transformedOrderItems = this.transformCartItemsToOrderItems(
+    //   this.cartItems
+    // );
 
-    this.orderDetails = {
-      shippingAddress: {
-        ...this.addressForm.value,
-      },
-      orderItems: transformedOrderItems,
-      totalPrice: this.totalPrice,
-    };
+    // this.orderDetails = {
+    //   shippingAddress: {
+    //     ...this.addressForm.value,
+    //   },
+    //   orderItems: transformedOrderItems,
+    //   totalPrice: this.totalPrice,
+    // };
 
     this.currentStep = 'summary';
   }

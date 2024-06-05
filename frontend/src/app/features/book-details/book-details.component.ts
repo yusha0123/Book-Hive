@@ -36,10 +36,6 @@ export class BookDetailsComponent implements OnInit {
     });
   }
 
-  isInCart(book: Book): boolean {
-    return !!this.cartService.cartItems.find((item) => item._id === book._id);
-  }
-
   onAddToCart(book: Book): void {
     this.cartService.addToCart(book);
   }

@@ -2,7 +2,7 @@
   <div class="flex gap-3 md:gap-5">
     <div class="shrink-0">
       <img
-        [src]="cartItem.coverUrl"
+        [src]="cartItem.book.coverUrl"
         alt="product-image"
         class="md:size-32 size-24 max-w-full rounded-lg object-center"
       />
@@ -11,10 +11,10 @@
       <p
         class="text-sm md:text-lg lg:text-xl 2xl:text-2xl truncate font-normal"
       >
-        {{ cartItem.title }}
+        {{ cartItem.book.title }}
       </p>
       <p class="text-sm md:text-lg font-semibold">
-        &#x20B9;{{ cartItem.price }}
+        &#x20B9;{{ cartItem.book.price }}
       </p>
       <p>Quantity: {{ cartItem.quantity }}</p>
     </div>

@@ -1,3 +1,10 @@
+export interface User {
+  access_token: string;
+  refresh_token: string;
+  name: string;
+  email: string;
+}
+
 export interface Book {
   _id?: string;
   title: string;
@@ -6,10 +13,22 @@ export interface Book {
   price: number;
   author: string;
   genre: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface CartItem extends Book {
+export interface CartItem {
+  book: Book;
   quantity: number;
+}
+
+export interface UserCart {
+  _id: string;
+  owner: string;
+  createdAt: string;
+  updatedAt: string;
+  items: CartItem[];
+  __v?: number;
 }
 
 export interface OrderItem {
@@ -30,13 +49,6 @@ export interface Order {
 }
 
 export interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-  name: string;
-  email: string;
-}
-
-export interface User {
   access_token: string;
   refresh_token: string;
   name: string;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CartItem } from 'src/app/interfaces';
+import { CartItem, UserCart } from 'src/app/interfaces';
 import { CartService } from 'src/app/services/cart.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { CartService } from 'src/app/services/cart.service';
 export class CartComponent implements OnInit {
   constructor(private cartService: CartService) {}
 
-  cartItems: CartItem[] = [];
+  cart!: UserCart;
   totalPrice: number = 0;
 
   ngOnInit(): void {
@@ -17,29 +17,33 @@ export class CartComponent implements OnInit {
   }
 
   calculateTotalPrice(): void {
-    this.totalPrice = this.cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+    this.totalPrice = this.cart.items.reduce(
+      (total, item) => total + item.book.price * item.quantity,
       0
     );
   }
 
   loadCartItems(): void {
-    this.cartItems = this.cartService.cartItems;
-    this.calculateTotalPrice();
+    this.cartService.getCartItems().subscribe({
+      next: (cart) => {
+        this.cart = cart;
+        this.calculateTotalPrice();
+      },
+    });
   }
 
   incrementItem(itemId: string): void {
-    this.cartService.incrementCartItem(itemId);
+    // this.cartService.incrementCartItem(itemId);
     this.loadCartItems();
   }
 
   decrementItem(itemId: string): void {
-    this.cartService.decrementCartItem(itemId);
+    // this.cartService.decrementCartItem(itemId);
     this.loadCartItems();
   }
 
   removeItem(itemId: string): void {
-    this.cartService.removeFromCart(itemId);
+    // this.cartService.removeFromCart(itemId);
     this.loadCartItems();
   }
 }

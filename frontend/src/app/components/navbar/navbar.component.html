@@ -25,11 +25,6 @@
         <a [routerLink]="link.route" class="nav-link">
           <i class="{{ link.icon }}"></i>
           {{ link.label }}
-          <span
-            *ngIf="link.label === 'Cart' && totalCartItems > 0"
-            class="inline-flex items-center justify-center p-1 px-2 w-fit text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full"
-            >{{ totalCartItems }}</span
-          >
         </a>
       </ng-container>
       <button class="nav-link" (click)="logout()" *ngIf="isLoggedIn$ | async">
@@ -73,9 +68,6 @@
           <div class="nav-link-mobile" (click)="handleNavClick(link.route)">
             <i class="{{ link.icon }}"></i>
             {{ link.label }}
-            <span *ngIf="link.label === 'Cart' && totalCartItems > 0">{{
-              totalCartItems
-            }}</span>
           </div>
         </ng-container>
       </div>

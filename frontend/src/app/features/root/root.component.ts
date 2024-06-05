@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Book } from 'src/app/interfaces';
+import { AuthService } from 'src/app/services/auth.service';
 import { BookService } from 'src/app/services/book.service';
 import { CartService } from 'src/app/services/cart.service';
 
@@ -18,7 +19,8 @@ export class RootComponent implements OnInit {
     private bookService: BookService,
     private toastr: ToastrService,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +38,11 @@ export class RootComponent implements OnInit {
 
   onAddToCart(event: Event, book: Book): void {
     event.stopPropagation();
-    this.cartService.addToCart(book);
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/cart']);
+    } else {
+      this.cartService.addToCart(book);
+    }
   }
 
   navigateToBook(bookId: string): void {
@@ -44,7 +50,8 @@ export class RootComponent implements OnInit {
   }
 
   isInCart(book: Book): boolean {
-    return !!this.cartService.cartItems.find((item) => item._id === book._id);
+    // return !!this.cartService.cartItems.find((item) => item._id === book._id);
+    return false;
   }
 
   navigateToCart(event: Event): void {

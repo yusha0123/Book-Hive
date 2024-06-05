@@ -1,72 +1,46 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Book, CartItem } from 'src/app/interfaces';
+import { catchError, finalize, map, Observable, throwError } from 'rxjs';
+import { Book, CartItem, User, UserCart } from 'src/app/interfaces';
+import { apiUrl } from '../constants';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  constructor(private toastr: ToastrService) {}
+  constructor(
+    private toastr: ToastrService,
+    private http: HttpClient,
+    private ngxLoader: NgxUiLoaderService
+  ) {}
 
   cartItems: CartItem[] = [];
 
-  // Helper method to find an item in the cart
-  private findCartItem(itemId: string): CartItem | undefined {
-    return this.cartItems.find((item) => item._id === itemId);
+  addToCart(book: Book): void {
+    this.http
+      .post<{ success: boolean; message: string }>(`${apiUrl}/cart`, {
+        bookId: book._id,
+      })
+      .pipe(
+        map((response) => {
+          if (response.success) {
+            this.toastr.success(response.message);
+          }
+        }),
+        catchError((error) => {
+          this.toastr.error('Failed to add to cart!');
+          throw error;
+        })
+      )
+      .subscribe();
   }
 
-  addToCart(item: Book): void {
-    const existingItem = this.findCartItem(item._id!);
-
-    if (existingItem) {
-      this.cartItems = this.cartItems.map((cartItem) =>
-        cartItem._id === existingItem._id
-          ? { ...cartItem, quantity: cartItem.quantity + 1 }
-          : cartItem
-      );
-    } else {
-      const newItem: CartItem = {
-        ...item,
-        quantity: 1,
-      };
-      this.cartItems.push(newItem);
-      this.toastr.success('Item added to cart!');
-    }
-  }
-
-  removeFromCart(itemId: string): void {
-    this.cartItems = this.cartItems.filter((item) => item._id !== itemId);
-  }
-
-  incrementCartItem(itemId: string): void {
-    const existingItem = this.findCartItem(itemId);
-
-    if (existingItem) {
-      this.cartItems = this.cartItems.map((cartItem) =>
-        cartItem._id === existingItem._id
-          ? { ...cartItem, quantity: cartItem.quantity + 1 }
-          : cartItem
-      );
-    }
-  }
-
-  decrementCartItem(itemId: string): void {
-    const existingItem = this.findCartItem(itemId);
-
-    if (existingItem) {
-      if (existingItem.quantity > 1) {
-        this.cartItems = this.cartItems.map((cartItem) =>
-          cartItem._id === existingItem._id
-            ? { ...cartItem, quantity: cartItem.quantity - 1 }
-            : cartItem
-        );
-      } else {
-        this.removeFromCart(itemId);
-      }
-    }
-  }
-
-  getTotalItems(): number {
-    return this.cartItems.length;
+  getCartItems(): Observable<UserCart> {
+    this.ngxLoader.start();
+    return this.http
+      .get<UserCart>(`${apiUrl}/cart`)
+      .pipe(finalize(() => this.ngxLoader.stop()));
   }
 }

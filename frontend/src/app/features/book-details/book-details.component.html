@@ -43,14 +43,7 @@
         <div
           class="flex my-2 items-center gap-2 justify-center md:justify-start"
         >
-          <ng-container *ngIf="isInCart(book!); else addToCartTemplate">
-            <a routerLink="/cart">
-              <button mat-flat-button color="accent">
-                <i class="pi pi-shopping-cart mr-2"></i>Go to Cart
-              </button>
-            </a>
-          </ng-container>
-          <ng-template #addToCartTemplate>
+          <ng-template>
             <button
               mat-flat-button
               color="primary"

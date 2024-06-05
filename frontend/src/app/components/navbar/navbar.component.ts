@@ -34,10 +34,6 @@ export class NavbarComponent implements OnInit {
     ];
   }
 
-  get totalCartItems(): number {
-    return this.cartService.getTotalItems();
-  }
-
   toggleNav(): void {
     this.isOpen = !this.isOpen;
     if (this.isOpen) {
