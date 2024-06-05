@@ -5,6 +5,7 @@ import { catchError, finalize, map, Observable, throwError } from 'rxjs';
 import { Book, CartItem, User, UserCart } from 'src/app/interfaces';
 import { apiUrl } from '../constants';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { extractErrorMessage } from '../helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -42,5 +43,28 @@ export class CartService {
     return this.http
       .get<UserCart>(`${apiUrl}/cart`)
       .pipe(finalize(() => this.ngxLoader.stop()));
+  }
+
+  updateCart(
+    action: 'increment' | 'decrement' | 'remove',
+    bookId: string
+  ): Observable<any> {
+    return this.http
+      .patch<any>(
+        `${apiUrl}/cart`,
+        { bookId },
+        {
+          params: {
+            action,
+          },
+        }
+      )
+      .pipe(
+        catchError((error) => {
+          const errorMessage = extractErrorMessage(error);
+          this.toastr.error(errorMessage);
+          return throwError(() => new Error(error));
+        })
+      );
   }
 }

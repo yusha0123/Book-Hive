@@ -49,7 +49,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.router.url !== '/sign-in'
         ) {
           this.authService.logout();
-          this.toastr.error('Session Expired.', 'Please login again!');
+          this.toastr.error('Please login again!', 'Session Expired.');
         }
         return throwError(() => error);
       })

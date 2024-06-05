@@ -11,6 +11,7 @@ export class CartComponent implements OnInit {
 
   cart!: UserCart;
   totalPrice: number = 0;
+  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.loadCartItems();
@@ -33,17 +34,58 @@ export class CartComponent implements OnInit {
   }
 
   incrementItem(itemId: string): void {
-    // this.cartService.incrementCartItem(itemId);
-    this.loadCartItems();
+    this.isLoading = true;
+    this.cartService.updateCart('increment', itemId).subscribe({
+      next: () => {
+        this.updateCart('increment', itemId);
+        this.isLoading = false;
+      },
+      error: () => (this.isLoading = false),
+    });
   }
 
   decrementItem(itemId: string): void {
-    // this.cartService.decrementCartItem(itemId);
-    this.loadCartItems();
+    this.cartService.updateCart('decrement', itemId).subscribe({
+      next: () => {
+        this.updateCart('decrement', itemId);
+        this.isLoading = false;
+      },
+      error: () => (this.isLoading = false),
+    });
   }
 
   removeItem(itemId: string): void {
-    // this.cartService.removeFromCart(itemId);
-    this.loadCartItems();
+    this.cartService.updateCart('remove', itemId).subscribe({
+      next: () => {
+        this.updateCart('remove', itemId);
+        this.isLoading = false;
+      },
+      error: () => (this.isLoading = false),
+    });
+  }
+
+  updateCart(
+    action: 'increment' | 'decrement' | 'remove',
+    itemId: string
+  ): void {
+    const itemIndex = this.cart.items.findIndex(
+      (item) => item.book._id === itemId
+    );
+    if (itemIndex !== -1) {
+      switch (action) {
+        case 'increment':
+          this.cart.items[itemIndex].quantity++;
+          break;
+        case 'decrement':
+          if (this.cart.items[itemIndex].quantity > 1) {
+            this.cart.items[itemIndex].quantity--;
+          }
+          break;
+        case 'remove':
+          this.cart.items.splice(itemIndex, 1);
+          break;
+      }
+      this.calculateTotalPrice();
+    }
   }
 }

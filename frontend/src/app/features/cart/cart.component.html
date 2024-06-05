@@ -18,6 +18,7 @@
           *ngFor="let cartItem of cart.items; index as i"
           [cartItem]="cartItem"
           [index]="i"
+          [isLoading]="isLoading"
           [totalItems]="cart.items.length"
           [disableEvents]="false"
           (increment)="incrementItem(cartItem.book._id!)"

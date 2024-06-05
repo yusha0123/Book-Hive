@@ -4,10 +4,12 @@ import { CartItem } from 'src/app/interfaces';
 @Component({
   selector: 'app-cart-item',
   templateUrl: './cart-item.component.html',
+  styleUrls: ['./cart-item.component.css'],
 })
 export class CartItemComponent {
   @Input() cartItem!: CartItem;
   @Input() index!: number;
+  @Input() isLoading!: boolean;
   @Input() disableEvents: boolean = false;
   @Input() totalItems!: number;
   @Output() increment = new EventEmitter<void>();

@@ -22,8 +22,8 @@
   <div class="flex items-center justify-between mt-4" *ngIf="!disableEvents">
     <div class="flex h-8 text-gray-600 max-w-16">
       <button
-        class="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-75 disabled:cursor-not-allowed"
-        [disabled]="cartItem.quantity === 1"
+        class="rounded-l-md cart-button"
+        [disabled]="cartItem.quantity === 1 || isLoading"
         (click)="decrementItem()"
       >
         -
@@ -34,8 +34,9 @@
         {{ cartItem.quantity }}
       </div>
       <button
-        class="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
+        class="rounded-r-md cart-button"
         (click)="incrementItem()"
+        [disabled]="isLoading"
       >
         +
       </button>
