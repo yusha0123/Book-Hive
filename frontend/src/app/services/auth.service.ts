@@ -87,16 +87,15 @@ export class AuthService {
   private handleSuccess(response: LoginResponse) {
     this.router.navigate(['/']);
     this.toastr.success(`Welcome back ${response.name}`);
-    localStorage.setItem(
-      'user',
-      JSON.stringify({
-        access_token: response.access_token,
-        refresh_token: response.refresh_token,
-        name: response.name,
-        email: response.email,
-      })
-    );
+    const user = {
+      access_token: response.access_token,
+      refresh_token: response.refresh_token,
+      name: response.name,
+      email: response.email,
+    };
+    localStorage.setItem('user', JSON.stringify(user));
     this.isAuthenticated.next(true);
+    this.user.next(user);
   }
 
   isLoggedIn(): boolean {

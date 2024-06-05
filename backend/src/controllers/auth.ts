@@ -2,11 +2,7 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
-import {
-  LoginRequestBody,
-  openIdResponse,
-  RegisterRequestBody,
-} from "types.js";
+import { LoginRequestBody, RegisterRequestBody } from "types.js";
 import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
 
 export const register = async (
@@ -60,54 +56,42 @@ export const login = async (
   }
 
   try {
-    const response = await axios.post(
-      `${keycloakConfig.baseUrl}/realms/${keycloakConfig.realmName}/protocol/openid-connect/token`,
-      {
-        grant_type: "password",
-        client_id: keycloakConfig.clientId,
-        client_secret: keycloakConfig.clientSecret,
-        username: username,
-        password: password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-    const { access_token } = response.data as openIdResponse;
-    const { decodedToken, error } = verifyToken(access_token);
+    await keycloakAdmin.auth({
+      grantType: "password",
+      clientId: keycloakConfig.clientId,
+      clientSecret: keycloakConfig.clientSecret,
+      username: username,
+      password: password,
+    });
 
-    if (error) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid or expired token. Please log in again.",
-      });
-    }
+    const { accessToken, refreshToken } = keycloakAdmin;
+
+    const { decodedToken } = verifyToken(accessToken);
 
     res.json({
-      ...response.data,
+      access_token: accessToken,
+      refresh_token: refreshToken,
       name: decodedToken?.name,
       email: decodedToken?.email,
     });
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
+    if (error.response) {
       if (error.response.status === 401) {
-        res.status(401).json({
+        return res.status(401).json({
           success: false,
           message: "Invalid user credentials!",
         });
       } else {
-        console.log(error.response.data);
-        res.status(error.response.status).json({
+        return res.status(error.response.status).json({
           success: false,
           message:
             error.response.data.error_description || "Something went wrong!",
         });
       }
     } else {
-      console.log(error);
-      res.status(500).json({ error: "Something went wrong!" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Something went wrong!" });
     }
   }
 };
