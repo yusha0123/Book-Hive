@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import Order from "models/order.js";
-import { OrderRequestBody } from "types.js";
+import { OrderRequestBody, User } from "types.js";
 
 export const createOrder = async (
-  req: Request<{}, {}, OrderRequestBody>,
+  req: Request<{}, {}, OrderRequestBody> & { user?: User },
   res: Response
 ) => {
   try {
@@ -18,6 +18,7 @@ export const createOrder = async (
     }
 
     const order = await Order.create({
+      orderedBy: req.user?.email,
       orderItems,
       shippingAddress,
       totalPrice,

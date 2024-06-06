@@ -13,11 +13,7 @@ const nodeCache = new NodeCache({
 });
 const Port = process.env.PORT || 3000;
 
-app.use(
-  cors({
-    origin: process.env.origin,
-  })
-);
+app.use(cors());
 
 app.use(express.json());
 app.get("/", (_, res) => res.send("Hello from Express!"));

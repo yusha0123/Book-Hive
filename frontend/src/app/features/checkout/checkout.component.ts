@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CartItem, Order, OrderItem } from 'src/app/interfaces';
+import { postalCodeValidator } from 'src/app/helpers';
+import { Order, OrderItem, UserCart } from 'src/app/interfaces';
 import { CartService } from 'src/app/services/cart.service';
 import { OrderService } from 'src/app/services/order.service';
 
@@ -12,11 +13,11 @@ import { OrderService } from 'src/app/services/order.service';
 })
 export class CheckoutComponent implements OnInit {
   addressForm: FormGroup;
-  cartItems: CartItem[] = [];
-  totalPrice: number = 0;
+  cart: UserCart | null = null;
+  isEmpty: boolean = false;
+  totalPrice: number | undefined = undefined;
   orderDetails: Order | null = null;
   currentStep: 'address' | 'summary' | 'success' = 'address';
-  loading: boolean = false;
   response!: Order;
 
   constructor(
@@ -28,64 +29,70 @@ export class CheckoutComponent implements OnInit {
     this.addressForm = this.formBuilder.group({
       address: ['', Validators.required],
       city: ['', Validators.required],
-      postalCode: [0, Validators.required],
+      postalCode: [null, [Validators.required, postalCodeValidator()]],
       country: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    // this.loadCartItems();
+    this.loadCartItems();
   }
 
-  // calculateTotalPrice(): void {
-  //   this.totalPrice = this.cartItems.reduce(
-  //     (total, item) => total + item.price * item.quantity,
-  //     0
-  //   );
-  // }
+  calculateTotalPrice(): void {
+    this.totalPrice = this.cart?.items?.reduce(
+      (total, item) => total + item.book.price * item.quantity,
+      0
+    );
+  }
+  loadCartItems(): void {
+    this.cartService.getCartItems().subscribe({
+      next: (cart) => {
+        if (!cart || cart.items.length === 0) {
+          this.isEmpty = true;
+        } else {
+          this.cart = cart;
+          this.calculateTotalPrice();
+        }
+      },
+    });
+  }
 
-  // loadCartItems(): void {
-  //   this.cartItems = this.cartService.cartItems;
-  //   this.calculateTotalPrice();
-  // }
-
-  // transformCartItemsToOrderItems(cartItems: CartItem[]): OrderItem[] {
-  //   return cartItems.map((item) => ({
-  //     book: item._id as string,
-  //     qty: item.quantity,
-  //   }));
-  // }
+  transformCartItemsToOrderItems(cart: UserCart): OrderItem[] {
+    return cart.items
+      .filter((item) => item.book?._id) // Filter out items with undefined or falsy book._id
+      .map((item) => ({
+        book: item.book?._id || '', // Using empty string as fallback if book._id is undefined
+        qty: item.quantity,
+      }));
+  }
 
   onAddressFormSubmit(): void {
     if (this.addressForm.invalid) {
       return;
     }
 
-    // const transformedOrderItems = this.transformCartItemsToOrderItems(
-    //   this.cartItems
-    // );
+    const transformedOrderItems = this.transformCartItemsToOrderItems(
+      this.cart!
+    );
 
-    // this.orderDetails = {
-    //   shippingAddress: {
-    //     ...this.addressForm.value,
-    //   },
-    //   orderItems: transformedOrderItems,
-    //   totalPrice: this.totalPrice,
-    // };
+    this.orderDetails = {
+      shippingAddress: {
+        ...this.addressForm.value,
+      },
+      orderItems: transformedOrderItems,
+      totalPrice: this.totalPrice!,
+    };
 
     this.currentStep = 'summary';
   }
 
   onOrderPlace(): void {
-    this.loading = true;
     this.orderService.createOrder(this.orderDetails!).subscribe({
       next: (response) => {
         this.currentStep = 'success';
-        this.loading = false;
         this.response = response;
       },
       error: () => {
-        this.loading = false;
         this.toastr.error('Failed to create order!');
       },
     });

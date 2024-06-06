@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
 import Cart from "models/cart.js";
 import { Types } from "mongoose";
+import { User } from "types.js";
 
 interface CustomRequest extends Request {
-  user?: {
-    name?: string;
-    email?: string;
-    username?: string;
-  };
+  user?: User;
 }
 
 interface UpdateCartRequest extends CustomRequest {

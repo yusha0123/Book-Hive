@@ -40,9 +40,14 @@ export class CartService {
 
   getCartItems(): Observable<UserCart> {
     this.ngxLoader.start();
-    return this.http
-      .get<UserCart>(`${apiUrl}/cart`)
-      .pipe(finalize(() => this.ngxLoader.stop()));
+    return this.http.get<UserCart>(`${apiUrl}/cart`).pipe(
+      catchError((error) => {
+        const errorMessage = extractErrorMessage(error);
+        this.toastr.error(errorMessage);
+        return throwError(() => new Error(error));
+      }),
+      finalize(() => this.ngxLoader.stop())
+    );
   }
 
   updateCart(

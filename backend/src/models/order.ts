@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
+    orderedBy: {
+      type: String,
+      required: true,
+    },
     orderItems: [
       {
         book: {

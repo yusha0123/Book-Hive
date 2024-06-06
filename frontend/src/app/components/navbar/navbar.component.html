@@ -64,12 +64,30 @@
       <app-icon [width]="60" [height]="55" />
       <h2 class="text-2xl font-semibold tracking-wide">BookHive</h2>
       <div class="w-full flex flex-col gap-2 border-t border-gray-200 pt-4">
+        <div
+          class="nav-link-mobile"
+          (click)="handleNavClick('sign-in')"
+          *ngIf="(isLoggedIn$ | async) === false"
+        >
+          <i class="pi pi-sign-in"></i>Sign In
+        </div>
+        <button class="nav-link-mobile" *ngIf="isLoggedIn$ | async">
+          <i class="pi pi-user"></i>
+          {{ (user$ | async)?.name | firstWord }}
+        </button>
         <ng-container *ngFor="let link of navLinks">
           <div class="nav-link-mobile" (click)="handleNavClick(link.route)">
             <i class="{{ link.icon }}"></i>
             {{ link.label }}
           </div>
         </ng-container>
+        <button
+          class="nav-link-mobile"
+          (click)="logout()"
+          *ngIf="isLoggedIn$ | async"
+        >
+          <i class="pi pi-sign-out"></i>Logout
+        </button>
       </div>
     </div>
   </section>

@@ -1,5 +1,11 @@
 import { Types } from "mongoose";
 
+type User = {
+  name?: string;
+  email?: string;
+  username?: string;
+};
+
 type ShippingAddress = {
   address: string;
   city: string;
@@ -17,6 +23,7 @@ type OrderRequestBody = {
   orderItems: OrderItem[];
   shippingAddress: ShippingAddress;
   totalPrice: number;
+  user?: User;
 };
 
 type Book = {

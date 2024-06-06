@@ -1,6 +1,7 @@
 <section class="min-h-screen bg-gray-100">
   <div
     class="w-full max-w-4xl mx-auto pt-20 md:pt-24 px-2 md:px-4 lg:px-6 xl:px-0 pb-10"
+    *ngIf="cart !== null"
   >
     <div
       class="w-full bg-white shadow p-3 md:p-5 xl:p-6 rounded-md overflow-hidden"
@@ -70,10 +71,10 @@
           {{ orderDetails?.shippingAddress?.postalCode }}
         </p>
         <app-cart-item
-          *ngFor="let cartItem of cartItems; index as i"
+          *ngFor="let cartItem of cart?.items; index as i"
           [cartItem]="cartItem"
           [index]="i"
-          [totalItems]="cartItems.length"
+          [totalItems]="cart.items.length!"
           [disableEvents]="true"
         />
         <div
@@ -83,20 +84,12 @@
             mat-flat-button
             color="accent"
             class="w-full max-w-xs"
-            [disabled]="loading"
             (click)="onOrderPlace()"
           >
             Place Order
           </button>
           <a routerLink="/" class="w-full max-w-xs">
-            <button
-              mat-flat-button
-              color="warn"
-              class="w-full"
-              [disabled]="loading"
-            >
-              Cancel
-            </button>
+            <button mat-flat-button color="warn" class="w-full">Cancel</button>
           </a>
         </div>
       </div>
@@ -119,5 +112,11 @@
         </p>
       </div>
     </div>
+  </div>
+  <div
+    *ngIf="isEmpty"
+    class="min-h-screen w-full flex items-center justify-center"
+  >
+    <h3 class="font-medium text-2xl md:text-3xl">Nothing to checkout!</h3>
   </div>
 </section>
