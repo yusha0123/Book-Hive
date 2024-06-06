@@ -1,16 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { isAdminUser, verifyToken } from "helpers/index.js";
 
-interface CustomRequest extends Request {
-  user?: {
-    name?: string;
-    email?: string;
-    username?: string;
-  };
-}
-
 export const isAdmin = async (
-  req: CustomRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

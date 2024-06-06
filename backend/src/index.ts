@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDb from "./utils/connectDb.js";
 import router from "./router/index.js";
 import NodeCache from "node-cache";
+import { User } from "types.js";
 
 config();
 connectDb();
@@ -12,6 +13,14 @@ const nodeCache = new NodeCache({
   stdTTL: 60 * 5,
 });
 const Port = process.env.PORT || 3000;
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User;
+    }
+  }
+}
 
 app.use(cors());
 

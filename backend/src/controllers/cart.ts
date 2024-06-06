@@ -1,13 +1,8 @@
 import { Request, Response } from "express";
 import Cart from "models/cart.js";
 import { Types } from "mongoose";
-import { User } from "types.js";
 
-interface CustomRequest extends Request {
-  user?: User;
-}
-
-interface UpdateCartRequest extends CustomRequest {
+interface UpdateCartRequest extends Request {
   body: {
     bookId: string;
   };
@@ -16,7 +11,7 @@ interface UpdateCartRequest extends CustomRequest {
   };
 }
 
-export const addToCart = async (req: CustomRequest, res: Response) => {
+export const addToCart = async (req: Request, res: Response) => {
   const { bookId } = req.body;
   let message;
   try {
@@ -47,7 +42,7 @@ export const addToCart = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getCartItems = async (req: CustomRequest, res: Response) => {
+export const getCartItems = async (req: Request, res: Response) => {
   try {
     const cart = await Cart.findOne({ owner: req.user?.email }).populate(
       "items.book"

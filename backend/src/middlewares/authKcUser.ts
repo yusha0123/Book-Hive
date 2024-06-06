@@ -1,19 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyToken } from "helpers/index.js";
 
-interface CustomRequest extends Request {
-  user?: {
-    name?: string;
-    email?: string;
-    username?: string;
-  };
-}
-
-export const authKcUser = (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const authKcUser = (req: Request, res: Response, next: NextFunction) => {
   let token = req.headers["authorization"];
 
   if (!token) {

@@ -14,6 +14,7 @@ const OrderSchema = new mongoose.Schema(
           ref: "Book",
         },
         qty: { type: Number, required: true },
+        _id: false,
       },
     ],
     shippingAddress: {
