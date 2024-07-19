@@ -23,3 +23,7 @@ body {
   background-color: #f9ecec;
   border-radius: 10px;
 }
+
+.mdc-notched-outline__notch {
+  border-right: none;
+}

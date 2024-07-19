@@ -19,6 +19,18 @@ export const register = async (
   }
 
   try {
+    const users = keycloakAdmin.users.find({
+      email,
+      username,
+    });
+
+    if (users) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists!",
+      });
+    }
+
     const newUser = await keycloakAdmin.users.create({
       username: username,
       email: email,
@@ -49,7 +61,7 @@ export const login = async (
   const { username, password } = req.body;
 
   if (!username || !password) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "All the fields are required!",
     });
