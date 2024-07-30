@@ -25,3 +25,7 @@ export const verifyToken = (
 export const isAdminUser = (decodedToken: TokenPayload | null): boolean => {
   return decodedToken?.realm_access?.roles.includes("admin") ?? false;
 };
+
+export const generateOtp = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};

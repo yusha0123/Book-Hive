@@ -1,17 +1,26 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import { verifyToken } from "helpers/index.js";
+import { generateOtp, verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { LoginRequestBody, RegisterRequestBody } from "types.js";
 import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
+import { createTransport } from "nodemailer";
+import emailTemplate from "templates/emailTemplate.js";
 
 export const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
   res: Response
 ) => {
-  const { username, email, firstname, lastname, password } = req.body;
+  const {
+    username,
+    email,
+    firstname: firstName,
+    lastname: lastName,
+    password,
+  } = req.body;
 
-  if (!username || !email || !firstname || !lastname || !password) {
+  if (!username || !email || !firstName || !lastName || !password) {
     return res.status(400).json({
       success: false,
       message: "All the fields are required!",
@@ -19,23 +28,33 @@ export const register = async (
   }
 
   try {
-    const users = keycloakAdmin.users.find({
-      email,
+    const usernameUsers = await keycloakAdmin.users.find({
       username,
     });
 
-    if (users) {
+    if (usernameUsers.length > 0) {
       return res.status(400).json({
         success: false,
-        message: "User already exists!",
+        message: "Username already exists!",
+      });
+    }
+
+    const emailUsers = await keycloakAdmin.users.find({
+      email,
+    });
+
+    if (emailUsers.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already exists!",
       });
     }
 
     const newUser = await keycloakAdmin.users.create({
-      username: username,
-      email: email,
-      firstName: firstname,
-      lastName: lastname,
+      username,
+      email,
+      firstName,
+      lastName,
       enabled: true,
       credentials: [
         {
@@ -50,7 +69,7 @@ export const register = async (
     res.status(201).json(newUser);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Something went wrong!" });
+    res.status(500).json({ message: "Something went wrong!" });
   }
 };
 
@@ -72,21 +91,73 @@ export const login = async (
       grantType: "password",
       clientId: keycloakConfig.clientId,
       clientSecret: keycloakConfig.clientSecret,
-      username: username,
-      password: password,
+      username,
+      password,
     });
 
-    const { accessToken, refreshToken } = keycloakAdmin;
-
+    const { accessToken } = keycloakAdmin;
     const { decodedToken } = verifyToken(accessToken);
 
-    res.json({
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      name: decodedToken?.name,
-      email: decodedToken?.email,
-    });
+    const userId = decodedToken?.sub;
+    const email = decodedToken?.email;
+
+    if (userId && email) {
+      const otp = generateOtp();
+
+      const transporter = createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
+        },
+      });
+
+      await keycloakAdmin.auth({
+        grantType: "client_credentials",
+        clientId: keycloakConfig.clientId,
+        clientSecret: keycloakConfig.clientSecret,
+      });
+
+      await keycloakAdmin.users.update(
+        { id: userId },
+        {
+          attributes: {
+            otp,
+          },
+        }
+      );
+
+      const tokenPayload = {
+        userId,
+      };
+
+      const temp_token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY, {
+        expiresIn: "5m",
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Your OTP Code",
+        html: emailTemplate(otp),
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      res.json({
+        success: true,
+        temp_token,
+        message: "OTP sent to your email!",
+      });
+    } else {
+      res
+        .status(500)
+        .json({ success: false, message: "Something went wrong!" });
+    }
   } catch (error) {
+    console.log(error);
     if (error.response) {
       if (error.response.status === 401) {
         return res.status(401).json({
@@ -94,10 +165,10 @@ export const login = async (
           message: "Invalid user credentials!",
         });
       } else {
-        return res.status(error.response.status).json({
+        return res.status(error.response?.status).json({
           success: false,
           message:
-            error.response.data.error_description || "Something went wrong!",
+            error.response.data?.error_description || "Something went wrong!",
         });
       }
     } else {
@@ -133,5 +204,65 @@ export const refreshToken = async (
   } catch (error) {
     console.error("Failed to refresh token:", error);
     res.status(500).json({ error: "Failed to refresh token!" });
+  }
+};
+
+interface TokenPayload extends JwtPayload {
+  userId: string;
+}
+
+export const verifyOtp = async (
+  req: Request<{}, {}, { otp: string; temp_token: string }>,
+  res: Response
+) => {
+  const { otp, temp_token } = req.body;
+
+  if (!otp || !temp_token) {
+    res.status(400).json({
+      success: false,
+      message: "Otp or Token is missing!",
+    });
+  }
+
+  try {
+    const token = jwt.verify(
+      temp_token,
+      process.env.JWT_SECRET_KEY
+    ) as TokenPayload;
+
+    const userId = token.userId;
+    const user = await keycloakAdmin.users.findOne({ id: userId });
+
+    const storedOtp = user.attributes?.otp[0];
+
+    if (Number(storedOtp) === Number(otp)) {
+      await keycloakAdmin.users.update(
+        { id: userId },
+        { attributes: { otp: [] } }
+      );
+
+      res.json({
+        success: true,
+        message: "OTP verified successfully!",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "Invalid OTP!",
+      });
+    }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'jwt expired') {
+      return res.status(401).json({
+        success: false,
+        message: "Token has expired. Please request a new OTP.",
+      });
+    } else {
+      console.error("Failed to Verify OTP:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to Verify OTP!",
+      });
+    }
   }
 };

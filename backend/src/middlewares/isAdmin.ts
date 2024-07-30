@@ -17,6 +17,7 @@ export const isAdmin = async (
 
   try {
     token = token.split(" ")[1];
+
     const { decodedToken, error } = verifyToken(token);
 
     if (error) {
