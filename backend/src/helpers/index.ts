@@ -53,15 +53,6 @@ export const refreshUser = async (
     return response.data;
   } catch (error) {
     console.log(error);
-    if (error.response) {
-      const errorMsg = `Error: ${error.response.status} - ${error.response.statusText}`;
-      return Promise.reject(new Error(errorMsg));
-    } else if (error.request) {
-      const errorMsg_1 = "Error: No response received from the server.";
-      return Promise.reject(new Error(errorMsg_1));
-    } else {
-      const errorMsg_2 = `Error: ${error.message}`;
-      return Promise.reject(new Error(errorMsg_2));
-    }
+    return Promise.reject(error);
   }
 };

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import { generateOtp, refreshUser, verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
@@ -15,13 +16,7 @@ export const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
   res: Response
 ) => {
-  const {
-    username,
-    email,
-    firstName,
-    lastName,
-    password,
-  } = req.body;
+  const { username, email, firstName, lastName, password } = req.body;
 
   if (!username || !email || !firstName || !lastName || !password) {
     return res.status(400).json({
@@ -132,20 +127,22 @@ export const login = async (
         { id: userId },
         {
           attributes: attributes,
-          //This step is mandatory since keycloak automatically clears otherwise fields on update
+          //This step is mandatory since keycloak automatically clears other fields on update
           email,
           firstName: decodedToken?.given_name,
-          lastName: decodedToken?.family_name
+          lastName: decodedToken?.family_name,
         }
       );
 
-      const tokenPayload = {
-        userId,
-      };
-
-      const temp_token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY, {
-        expiresIn: "5m",
-      });
+      const temp_token = jwt.sign(
+        {
+          userId,
+        },
+        process.env.JWT_SECRET_KEY,
+        {
+          expiresIn: "5m",
+        }
+      );
 
       const mailOptions = {
         from: process.env.EMAIL,
@@ -196,7 +193,7 @@ export const refreshToken = async (
   const { refreshToken } = req.body;
 
   if (!refreshToken) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "Refresh token is required!",
     });
@@ -207,8 +204,22 @@ export const refreshToken = async (
 
     res.json(data);
   } catch (error) {
-    console.log("Failed to refresh Token: ", error);
-    res.status(500).json({ message: "Internal server error!" });
+    if (axios.isAxiosError(error) && error.response) {
+      if (
+        error.response.status === 400 &&
+        error.response.data.error === "invalid_grant"
+      ) {
+        res.status(400).json({ message: "Invalid refresh token!" });
+      } else {
+        res.status(error.response.status).json({
+          message:
+            error.response?.data?.error_description || "An error occurred!",
+        });
+      }
+    } else {
+      console.log(error);
+      res.status(500).json({ message: "Internal server error!" });
+    }
   }
 };
 
@@ -254,10 +265,10 @@ export const verifyOtp = async (
             otp: undefined,
             refresh_token: undefined,
           },
-          //This step is mandatory since keycloak automatically clears otherwise fields on update
+          //This step is mandatory since keycloak automatically clears other fields on update
           email: user.email,
           firstName: user.firstName,
-          lastName: user.lastName
+          lastName: user.lastName,
         }
       );
 
@@ -278,18 +289,23 @@ export const verifyOtp = async (
       });
     }
   } catch (error) {
-    console.error("Failed to Verify OTP:", error);
     if (error instanceof Error && error.message === "jwt expired") {
       //If the token is expired that means the OTP is also expired
       return res.status(401).json({
         success: false,
         message: "OTP has expired, Please request a new One.",
       });
-    } else {
-      return res.status(500).json({
+    } else if (error?.message) {
+      const msg = error.message as string;
+      return res.status(400).json({
         success: false,
-        message: "Internal server error!",
+        message: `${msg.charAt(0).toUpperCase()}${msg.slice(1)}!`,
       });
     }
+    console.error("Failed to Verify OTP:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error!",
+    });
   }
 };
