@@ -1,16 +1,15 @@
-import axios from "axios";
 import { Request, Response } from "express";
 import { generateOtp, refreshUser, verifyToken } from "helpers/index.js";
 import { nodeCache } from "index.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { createTransport } from "nodemailer";
+import emailTemplate from "templates/emailTemplate.js";
 import {
   LoginRequestBody,
   RegisterRequestBody,
   UserAttributes,
 } from "types.js";
 import { keycloakAdmin, keycloakConfig } from "utils/keyCloak.js";
-import { createTransport } from "nodemailer";
-import emailTemplate from "templates/emailTemplate.js";
 
 export const register = async (
   req: Request<{}, {}, RegisterRequestBody>,
@@ -19,8 +18,8 @@ export const register = async (
   const {
     username,
     email,
-    firstname: firstName,
-    lastname: lastName,
+    firstName,
+    lastName,
     password,
   } = req.body;
 
@@ -96,7 +95,6 @@ export const login = async (
       clientId: keycloakConfig.clientId,
       clientSecret: keycloakConfig.clientSecret,
       username,
-
       password,
     });
 
@@ -134,6 +132,10 @@ export const login = async (
         { id: userId },
         {
           attributes: attributes,
+          //This step is mandatory since keycloak automatically clears otherwise fields on update
+          email,
+          firstName: decodedToken?.given_name,
+          lastName: decodedToken?.family_name
         }
       );
 
@@ -206,7 +208,7 @@ export const refreshToken = async (
     res.json(data);
   } catch (error) {
     console.log("Failed to refresh Token: ", error);
-    res.status(500).json({ error: "Failed to refresh token!" });
+    res.status(500).json({ message: "Internal server error!" });
   }
 };
 
@@ -240,7 +242,7 @@ export const verifyOtp = async (
     ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid request!",
+        message: "Please login and request an OTP first!",
       });
     }
 
@@ -252,6 +254,10 @@ export const verifyOtp = async (
             otp: undefined,
             refresh_token: undefined,
           },
+          //This step is mandatory since keycloak automatically clears otherwise fields on update
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName
         }
       );
 
@@ -274,14 +280,15 @@ export const verifyOtp = async (
   } catch (error) {
     console.error("Failed to Verify OTP:", error);
     if (error instanceof Error && error.message === "jwt expired") {
+      //If the token is expired that means the OTP is also expired
       return res.status(401).json({
         success: false,
-        message: "Token has expired. Please request a new OTP.",
+        message: "OTP has expired, Please request a new One.",
       });
     } else {
       return res.status(500).json({
         success: false,
-        message: "Failed to Verify OTP!",
+        message: "Internal server error!",
       });
     }
   }

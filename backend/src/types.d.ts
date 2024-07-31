@@ -42,8 +42,8 @@ type LoginRequestBody = {
 
 type RegisterRequestBody = LoginRequestBody & {
   email: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
 };
 
 interface RealmAccess {
