@@ -14,7 +14,7 @@ const emailTemplate = (otp: string) => `
         line-height: 2;
       "
     >
-      <div style="width: 100%; padding: 20px 0">
+      <div style="width: 100%">
         <p style="font-size: 1.1em">Hi,</p>
         <p>
           Use the following OTP to complete your Sign In procedure. OTP is valid

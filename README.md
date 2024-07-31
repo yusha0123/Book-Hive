@@ -35,6 +35,8 @@ BookHive/
    KEY_CLOAK_REALM=your_realm # Keycloak realm name
    KEY_CLOAK_BASE_URL=http://keycloak_host/auth # Base URL for your Keycloak instance, typically including /auth
    KEY_CLOAK_PUBLIC_KEY=your_public_key # Public key from Keycloak for token validation
+   EMAIL=Your email address
+   PASSWORD=Your app password
    ```
 
    - Replace `mongodb://your_mongo_host:port/your_database_name` with your actual MongoDB connection string.

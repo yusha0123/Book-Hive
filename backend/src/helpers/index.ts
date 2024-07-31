@@ -1,5 +1,7 @@
+import axios from "axios";
 import jwt from "jsonwebtoken";
-import { TokenPayload } from "types.js";
+import { RefreshTokenResponse, TokenPayload } from "types.js";
+import { keycloakConfig } from "utils/keyCloak.js";
 
 export const verifyToken = (
   accessToken: string
@@ -28,4 +30,38 @@ export const isAdminUser = (decodedToken: TokenPayload | null): boolean => {
 
 export const generateOtp = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+export const refreshUser = async (
+  refreshToken: string
+): Promise<RefreshTokenResponse> => {
+  try {
+    const response = await axios.post<RefreshTokenResponse>(
+      `${keycloakConfig.baseUrl}/realms/${keycloakConfig.realmName}/protocol/openid-connect/token`,
+      new URLSearchParams({
+        grant_type: "refresh_token",
+        client_id: keycloakConfig.clientId,
+        client_secret: keycloakConfig.clientSecret,
+        refresh_token: refreshToken,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response) {
+      const errorMsg = `Error: ${error.response.status} - ${error.response.statusText}`;
+      return Promise.reject(new Error(errorMsg));
+    } else if (error.request) {
+      const errorMsg_1 = "Error: No response received from the server.";
+      return Promise.reject(new Error(errorMsg_1));
+    } else {
+      const errorMsg_2 = `Error: ${error.message}`;
+      return Promise.reject(new Error(errorMsg_2));
+    }
+  }
 };
