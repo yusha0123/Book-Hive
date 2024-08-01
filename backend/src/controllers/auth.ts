@@ -248,7 +248,7 @@ export const verifyOtp = async (
     const attributes = user?.attributes as UserAttributes;
 
     if (
-      attributes?.otp === undefined ||
+      attributes === undefined || attributes?.otp === undefined ||
       attributes?.refresh_token === undefined
     ) {
       return res.status(400).json({
@@ -289,7 +289,7 @@ export const verifyOtp = async (
       });
     }
   } catch (error) {
-    if (error instanceof Error && error.message === "jwt expired") {
+    if (error instanceof Error && error?.message === "jwt expired") {
       //If the token is expired that means the OTP is also expired
       return res.status(401).json({
         success: false,
